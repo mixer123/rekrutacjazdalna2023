@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+Wybierz klasę
+{% endblock %}
+
+
+{%block content %}
+{% if all_klas_count > 0 %}
+    <div >
+        <form action="{% url 'zapisz-page' %}">
+
+
+                {% csrf_token %}
+                 <select  name="klass" >
+                     {% for klasa in all_klas  %}
+                     <option value={{klasa.name}} >{{klasa.name}}</option>
+                     {% endfor %}
+                 </select>
+
+
+
+                <input type="submit" value="Zapisz" >
+        </form>
+    </div>
+{% endif %}
+{% if all_klas_count == 0 %}
+    Zaczekaj na wprowadzenie klas do systemu
+{% endif %}
+{% endblock %}

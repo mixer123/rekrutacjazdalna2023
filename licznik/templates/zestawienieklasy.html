@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static%}
+{%block title %}
+
+{% endblock %}
+
+
+{%block content %}
+
+<h1>{{ clas.name }}</h1><br>
+{% if kand_oryg_il > 0 %}
+    <h2>Lista kandydatów z oryginalnymi świadectwami</h2><br>
+    {% for k in kand_oryg %}
+        {% for key, value in k.items %}
+            {{ value }}
+        {% endfor %}<br>
+    {% endfor %}
+{% endif %}
+
+{% if kand_kopia_il > 0 %}
+    <h2>Lista kandydatów z kopiami świadectw</h2><br>
+    {% for k in kand_kopia %}
+        {% for key, value in k.items %}
+            {{ value }}
+        {% endfor %}<br>
+    {% endfor %}
+{% endif %}
+
+{% if kand_podanie_il > 0 %}
+    <h2>Lista kandydatów z podaniem do szkoły</h2><br>
+    {% for k in kand_podanie %}
+        {% for key, value in k.items %}
+            {{ value }}
+        {% endfor %}<br>
+    {% endfor %}
+{% endif %}
+
+
+{% endblock %}
