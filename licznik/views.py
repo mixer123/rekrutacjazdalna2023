@@ -164,7 +164,7 @@ def starting_page(request):
 @login_required(login_url='/accounts/login')
 def zmienstatus(request):
 
-    if Status.objects.all().count() == 0:
+    if Status.objects.all().count() == 0 or None:
 
         if request.method == 'POST':
             form = StatusForm(request.POST or None)
@@ -271,8 +271,9 @@ def chooseclas(request):
         message = False # blokada zapisu przez kandydata
     else:
         message = True
-    all_klas = Klasa.objects.all()
-    all_klas_count = Klasa.objects.all().count()
+    all_klas = School.objects.all()
+    all_klas_count = School.objects.all().count()
+    print('all klas count',all_klas_count)
     return render(request, 'chooseclas.html', {'all_klas': all_klas, 'all_klas_count':all_klas_count,'message':message})
 
 
@@ -301,7 +302,7 @@ def zapisz(request):
 
 @login_required(login_url='/accounts/login')
 def zmiendane(request):
-        patern = request.user
+        patern = request.user.username
         user1 = User.objects.get(username=patern)
         user = get_object_or_404(User, id=user1.id)
         kandydat = Kandydat(user_id=user.id)

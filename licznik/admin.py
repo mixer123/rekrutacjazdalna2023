@@ -152,6 +152,9 @@ class PostAdmin(admin.ModelAdmin):
     list_per_page = 20
 
 
+class SchoolAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ['name']
 
-admin.site.register(School)
+admin.site.register(School, SchoolAdmin)
 admin.site.register(Status)

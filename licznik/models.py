@@ -30,16 +30,9 @@ from datetime import date
 #         status = False
 #         raise ValidationError('Błedna data')
 
-class Status(models.Model):
-    datastart = models.DateField(default=date.today, verbose_name='Data początkowa')
-    dataend = models.DateField(default=date.today, verbose_name='Data końcowa')
-    status = models.BooleanField(default=False, verbose_name='status')
-
-    # def __str__(self):
-    #     return f'{self.status}'
-
 class School(models.Model):
     name = models.CharField(max_length=100, default='', unique=True, verbose_name='')
+
     class Meta:
         verbose_name_plural = "Szkola"
         verbose_name = "Szkola"
@@ -48,17 +41,33 @@ class School(models.Model):
         return self.name
 
 class Klasa(models.Model):
-    name = models.CharField(max_length=100, unique=True, verbose_name='klasa')
-    school = models.ForeignKey(School, on_delete=models.CASCADE, default='')
+    name = models.CharField(max_length=100, verbose_name='klasa')
+    school = models.ForeignKey(School , on_delete=models.CASCADE)
+
     class Meta:
+        unique_together = ('name', 'school')
         verbose_name_plural = "Klasa"
         verbose_name = "Klasa"
+
     def __str__(self):
         return self.name
 
     def save(self):
         self.name = self.name.upper()
+
         super(Klasa, self).save()
+
+
+
+
+class Status(models.Model):
+    datastart = models.DateField(default=date.today, verbose_name='Data początkowa')
+    dataend = models.DateField(default=date.today, verbose_name='Data końcowa')
+    status = models.BooleanField(default=False, verbose_name='status')
+
+    # def __str__(self):
+    #     return f'{self.status}'
+
 
 
 
