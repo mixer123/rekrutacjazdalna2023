@@ -45,12 +45,17 @@ class Klasa(models.Model):
     school = models.ForeignKey(School , on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('name', 'school')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'school'], name="unique_name_school"
+            )
+        ]
+        # unique_together = ('name', 'school')
         verbose_name_plural = "Klasa"
         verbose_name = "Klasa"
 
     def __str__(self):
-        return self.name
+        return f'{self.name}  {self.school.name}'
 
     def save(self):
         self.name = self.name.upper()
@@ -104,8 +109,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Nazwisko')
     # USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['pesel','first_name']
-    def __str__(self):
-        return self.last_name + self.first_name
+
 
 
 class Oryginal(models.Model):

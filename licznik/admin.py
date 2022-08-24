@@ -77,8 +77,8 @@ class KandydatResources(resources.ModelResource):
 class KandydatAdmin(ExportMixin, admin.ModelAdmin):
     # change_list_template = "admin/licznik/kandydat/post_changelist.html"
 
-    list_display = ['user','document', 'clas', 'suma_pkt']
-    search_fields = ['user__last_name', 'pesel','document__name','second_name1','second_name2']
+    list_display = ['user','document', 'clas','suma_pkt']
+    search_fields = ['user__last_name', 'user__pesel','document__name','user__first_name','user__second_name','user__last_name','clas__name']
     list_filter = ['document', 'clas']
     resource_class = KandydatResources
     list_per_page = 20

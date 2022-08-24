@@ -256,6 +256,9 @@ def zmienstatus(request):
 
 @login_required(login_url='/accounts/login')
 def chooseclas(request):
+    if Status.objects.all().count()==0 or None:
+        messages.warning(request, 'Zablokowano wybór klasy')
+        return render(request, 'chooseclas.html')
     statobj = Status.objects.all().first()
     checkstat = statobj.status
     datestart = statobj.datastart
@@ -271,8 +274,8 @@ def chooseclas(request):
         message = False # blokada zapisu przez kandydata
     else:
         message = True
-    all_klas = School.objects.all()
-    all_klas_count = School.objects.all().count()
+    all_klas = Klasa.objects.all()
+    all_klas_count = Klasa.objects.all().count()
     print('all klas count',all_klas_count)
     return render(request, 'chooseclas.html', {'all_klas': all_klas, 'all_klas_count':all_klas_count,'message':message})
 
@@ -286,7 +289,7 @@ def zapisz(request):
     minocena = min(oceny)
     ocena_minocena = Ocena.objects.filter(ocena=minocena).first() # obiekt ocena która ma najmn. ocenę
 
-    clas = get_object_or_404(Klasa, name = request.GET['klass'])
+    clas = get_object_or_404(Klasa, id = request.GET['klass'])
 
     if not Kandydat.objects.filter(user_id = user.id).exists():
         kand = Kandydat(user_id = user.id, clas_id = clas.id,

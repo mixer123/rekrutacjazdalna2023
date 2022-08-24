@@ -5,9 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/migrations/0002_klasa_school.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/templates/chooseclas.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/chooseclas.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
