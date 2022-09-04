@@ -1,8 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, IntegrityError
+from django.db.models import Q
+from django.db.transaction import TransactionManagementError
 from django.utils import timezone
+from django.core.exceptions import  NON_FIELD_ERRORS
 
 # Create your models here.
 
@@ -18,7 +21,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 # Create your models here.
-from django.http import request
+from django.http import request, HttpResponse
 from django.shortcuts import redirect
 import datetime
 from datetime import date
@@ -45,14 +48,16 @@ class Klasa(models.Model):
     school = models.ForeignKey(School , on_delete=models.CASCADE)
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['name', 'school'], name="unique_name_school"
-            )
-        ]
-        # unique_together = ('name', 'school')
+
         verbose_name_plural = "Klasa"
         verbose_name = "Klasa"
+
+    def clean(self, exclude=None):
+        qs = Klasa.objects.filter(school_id=self.school_id)
+        if self.pk is None:
+            if qs.filter(name=self.name.upper()).exists():
+                raise ValidationError("Klasa istnieje")
+
 
     def __str__(self):
         return f'{self.name}  {self.school.name}'
@@ -60,7 +65,7 @@ class Klasa(models.Model):
     def save(self):
         self.name = self.name.upper()
 
-        super(Klasa, self).save()
+
 
 
 
