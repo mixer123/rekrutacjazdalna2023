@@ -14,9 +14,9 @@ Wybierz klasę
 
         
             {% csrf_token %}
-             <select  name="klass" >
-                 {% for klasa in all_klas  %}
-                 <option value={{klasa.name}} >{{klasa.name}}</option>
+             <select  name="schools" >
+                 {% for school in all_school  %}
+                    <option value={{school.name}} >{{school.name}}</option>
                  {% endfor %}
              </select>
 

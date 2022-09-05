@@ -74,12 +74,18 @@ class KandydatResources(resources.ModelResource):
         fields = ('suma_pkt')
 
 
-class KandydatAdmin(ExportMixin, admin.ModelAdmin):
+class ReadOnlyMixin(): # Add inheritance from "object" if using Python 2
+    list_display_links = None
+
+
+
+class KandydatAdmin(ReadOnlyMixin  ,ExportMixin, admin.ModelAdmin):
     # change_list_template = "admin/licznik/kandydat/post_changelist.html"
 
     list_display = ['user','document', 'clas','suma_pkt']
     search_fields = ['user__last_name', 'user__pesel','document__name','user__first_name','user__second_name','user__last_name','clas__name']
     list_filter = ['document', 'clas']
+    readonly_fields = ['user']
     resource_class = KandydatResources
     list_per_page = 20
 

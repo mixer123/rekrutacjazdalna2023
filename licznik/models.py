@@ -60,7 +60,7 @@ class Klasa(models.Model):
 
 
     def __str__(self):
-        return f'{self.name}  {self.school.name}'
+        return f'{self.name} {self.school.name}'
 
     def save(self):
         self.name = self.name.upper()
@@ -193,7 +193,7 @@ class Kandydat(models.Model):
         (0, 0),
         (3, 3),
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     clas = models.ForeignKey(Klasa, null=True, on_delete=models.SET_NULL, verbose_name='Klasa')
     document = models.ForeignKey(Oryginal, null=True, on_delete=models.SET_NULL, verbose_name='Dokument')
     internat = models.BooleanField(default=False, verbose_name='Internat')

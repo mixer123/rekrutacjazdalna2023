@@ -361,29 +361,42 @@ def zmienclas(request):
 
 @login_required(login_url='login-page')
 def zestawienieklasy(request):
-    clas = Klasa.objects.get(name=request.GET['klass'])
+
+    clas = Klasa.objects.filter(school_id=School.objects.get(name=request.GET['schools']).id)
+    for c in clas:
+        print('clas',c.name, c.id)
     doc_oryg = get_object_or_404(Oryginal, name='ORYGINAL')
     doc_kopia = get_object_or_404(Oryginal, name='KOPIA')
     doc_podanie = get_object_or_404(Oryginal, name='PODANIE')
-    kand_oryg = Kandydat.objects.filter(clas=clas,document=doc_oryg).values('user__last_name','user__first_name','user__pesel')\
+    # kand_oryg = Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).values()
+    for c in clas:
+        print(c.id)
+        kand_oryg = Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).values('user__last_name','user__first_name','user__pesel')\
         .order_by('-document__name','user__last_name')
-    kand_oryg_il = kand_oryg.count()
+        context = {
+            'mymembers': kand_oryg,
+        }
+        print(kand_oryg)
+
+
+    # kand_oryg = Kandydat.objects.filter(clas=clas,document=doc_oryg).values('user__last_name','user__first_name','user__pesel')\
+    #     .order_by('-document__name','user__last_name')
+    # kand_oryg_il = kand_oryg.count()
     kand_kopia = Kandydat.objects.filter(clas=clas, document=doc_kopia).values('user__last_name', 'user__first_name',
                                                                              'user__pesel') \
         .order_by('-document__name', 'user__last_name')
-    kand_kopia_il = kand_kopia.count()
+    # kand_kopia_il = kand_kopia.count()
     kand_podanie = Kandydat.objects.filter(clas=clas, document=doc_podanie).values('user__last_name', 'user__first_name',
                                                                              'user__pesel') \
         .order_by('-document__name', 'user__last_name')
-    kand_podanie_il = kand_podanie.count()
-    return render(request, 'zestawienieklasy.html', {'kand_oryg':kand_oryg,'kand_kopia':kand_kopia,'kand_podanie':kand_podanie,
-                                                     'clas':clas,'kand_oryg_il':kand_oryg_il,
-                                                     'kand_kopia_il':kand_kopia_il, 'kand_podanie_il':kand_podanie_il})
+    # kand_podanie_il = kand_podanie.count()
+    return render(request, 'zestawienieklasy.html', {'kand_oryg':kand_oryg})
 
 @login_required(login_url='login-page')
 def zestawienie(request):
     all_klas = Klasa.objects.all()
-    return render(request, 'zestawienie.html',{'all_klas': all_klas})
+    all_school = School.objects.all()
+    return render(request, 'zestawienie.html',{'all_klas': all_klas,'all_school':all_school})
 
 
 @login_required(login_url='login')
