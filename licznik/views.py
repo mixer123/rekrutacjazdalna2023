@@ -369,14 +369,24 @@ def zestawienieklasy(request):
     doc_kopia = get_object_or_404(Oryginal, name='KOPIA')
     doc_podanie = get_object_or_404(Oryginal, name='PODANIE')
     # kand_oryg = Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).values()
+    candidates = []
     for c in clas:
         print(c.id)
         kand_oryg = Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).values('user__last_name','user__first_name','user__pesel')\
         .order_by('-document__name','user__last_name')
+        candidates.append(kand_oryg)
         context = {
             'mymembers': kand_oryg,
         }
-        print(kand_oryg)
+        for kan in kand_oryg:
+            for k in kan:
+               print('k',k)
+
+
+
+
+    print(candidates)
+
 
 
     # kand_oryg = Kandydat.objects.filter(clas=clas,document=doc_oryg).values('user__last_name','user__first_name','user__pesel')\
@@ -390,7 +400,7 @@ def zestawienieklasy(request):
                                                                              'user__pesel') \
         .order_by('-document__name', 'user__last_name')
     # kand_podanie_il = kand_podanie.count()
-    return render(request, 'zestawienieklasy.html', {'kand_oryg':kand_oryg})
+    return render(request, 'zestawienieklasy.html', {'kand_oryg':kand_oryg, 'clas':clas})
 
 @login_required(login_url='login-page')
 def zestawienie(request):

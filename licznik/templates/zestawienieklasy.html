@@ -10,12 +10,14 @@
 <h1>{{ clas.name }}</h1><br>
 
     <h2>Lista kandydatów z oryginalnymi świadectwami</h2><br>
+    {% for c in clas %}
+        {% for k in kand_oryg %}
+            {{ k.c}}
+            {% for key, value in k.items %}
+                {{ value }}
 
-    {% for k in kand_oryg %}
-            {{ k }}
-<!--        {% for key, value in k.items %}-->
-<!--            {{ value }}-->
-        {% endfor %}<br>
+            {% endfor %}<br>
+        {% endfor %}
     {% endfor %}
 
 
