@@ -372,8 +372,8 @@ def zestawienieklasy(request):
     candidates = []
     for c in clas:
         kand_oryg = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).
-                         values('clas__name','user__username','user__last_name','user__first_name','user__pesel')\
-                         .order_by('user__last_name'))
+                         values('clas__name','user__last_name','user__first_name','user__pesel')\
+                         .order_by('clas__name','user__last_name'))
         print('kand_oryg ', kand_oryg) # !!! To jest cala klasa !!!
         candidates.append(kand_oryg)
 
