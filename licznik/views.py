@@ -372,21 +372,22 @@ def zestawienieklasy(request):
     candidates = []
     for c in clas:
         kand_oryg = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).
-                         values('clas__name','user__last_name','user__first_name','user__pesel')\
+                         values('clas__name','user__username','user__last_name','user__first_name','user__pesel')\
                          .order_by('user__last_name'))
+        print('kand_oryg ', kand_oryg) # !!! To jest cala klasa !!!
         candidates.append(kand_oryg)
 
 
-
-
-    print(candidates) # lista list słowników
+    print('candidates ', candidates) # lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
     # Teraz zrobię liste list
     list_candidates =[]
     for c in candidates:
         if len(c) !=0:
-            print('el ',list(c[0].values()))
-            list_candidates.append(list(c[0].values()))
-    print(list_candidates)
+            print('el ',c,'end line' )
+            for k in c:
+                print('kan ',list(k.values()))
+                list_candidates.append(list(k.values()))
+    print('list_candidates ',list_candidates)
 
 
 
