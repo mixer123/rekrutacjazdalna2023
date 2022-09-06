@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+
+{% block title %}
+Ogłoszenie
+{% endblock %}
+
+
+{%block content %}
+
+
+Jesteś zalogowany {{ user }}
+<br>
+<h2>Ogłoszenia</h2>
+{% for post in allposts %}
+    {{ post.date }}
+    {{ post.text }}
+<br>
+{% endfor %}
+
+{% endblock %}

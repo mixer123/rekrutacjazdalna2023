@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static%}
+{%block title %}
+
+{% endblock %}
+
+
+{%block content %}
+
+<h1>{{ clas.name }}</h1><br>
+
+    <h2>Lista kandydatów z oryginalnymi świadectwami</h2><br>
+
+    {% for c in list_candidates %}
+        {{ c }}<br>
+    {% endfor %}
+
+
+
+
+
+
+
+
+{% endblock %}

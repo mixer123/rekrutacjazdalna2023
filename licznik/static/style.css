@@ -1,0 +1,30 @@
+
+p {
+  color: orangered;
+  font-size: 15px;
+   padding-left:18px;
+
+
+  }
+
+.niezalogowany{
+  color: orangered;
+  font-size: 15px;
+  padding-left: 18px;
+
+}
+
+
+
+.niezalogowany_nag{
+  color: blue;
+  font-size: 25px;
+  padding-left: 18px;
+
+}
+
+
+.bgpage{
+  background-color: #d1f0bb;
+}
+
