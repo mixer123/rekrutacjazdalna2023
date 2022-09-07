@@ -6,7 +6,6 @@
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/zestawienie.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/zestawienie.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/templates/zestawienieklasy.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/zestawienieklasy.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/views.py" afterDir="false" />
     </list>

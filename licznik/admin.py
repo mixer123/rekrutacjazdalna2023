@@ -30,6 +30,7 @@ class KandydatInline(admin.TabularInline):
 # @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username']
+    readonly_fields = ['username']
     exclude = ['last_login','is_superuser','groups','password']
     inlines = [
         KandydatInline,

@@ -371,21 +371,23 @@ def zestawienieklasy(request):
     # kand_oryg = Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).values()
     candidates = []
     for c in clas:
-        print(c.id)
-        kand_oryg = Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).values('user__last_name','user__first_name','user__pesel')\
-        .order_by('-document__name','user__last_name')
+        kand_oryg = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).
+                         values('clas__name','user__last_name','user__first_name','user__pesel')\
+                         .order_by('clas__name','user__last_name'))
+        print('kand_oryg ', kand_oryg) # !!! To jest cala klasa !!!
         candidates.append(kand_oryg)
-        context = {
-            'mymembers': kand_oryg,
-        }
-        for kan in kand_oryg:
-            for k in kan:
-               print('k',k)
 
 
-
-
-    print(candidates)
+    print('candidates ', candidates) # lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
+    # Teraz zrobię liste list
+    list_candidates =[]
+    for c in candidates:
+        if len(c) !=0:
+            print('el ',c,'end line' )
+            for k in c:
+                print('kan ',list(k.values()))
+                list_candidates.append(list(k.values()))
+    print('list_candidates ',list_candidates)
 
 
 
@@ -400,7 +402,7 @@ def zestawienieklasy(request):
                                                                              'user__pesel') \
         .order_by('-document__name', 'user__last_name')
     # kand_podanie_il = kand_podanie.count()
-    return render(request, 'zestawienieklasy.html', {'kand_oryg':kand_oryg, 'clas':clas})
+    return render(request, 'zestawienieklasy.html', {'kand_oryg':kand_oryg, 'clas':clas,'list_candidates':list_candidates})
 
 @login_required(login_url='login-page')
 def zestawienie(request):
