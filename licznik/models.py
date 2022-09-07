@@ -105,13 +105,15 @@ def f_pesel(nr):
 
 
 class User(AbstractUser):
-    # username = None
+    username = models.CharField(max_length=30, unique=True, default='Wpisz unikalną nazwę', verbose_name='Nazwa użytkownika', help_text='Wymagany')
+    first_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Imię')
+    second_name = models.CharField(null=True, blank=True, max_length=10, help_text='Opcja', verbose_name='Drugie imię ')
+    last_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Nazwisko')
+
+    email = models.EmailField('email adress', unique=True, help_text='Wymagany')
+
     pesel = models.CharField(max_length=11, unique=True, validators=[
         MinLengthValidator(11), MaxLengthValidator(11), f_pesel], help_text='Wymagany')
-    second_name = models.CharField(null=True, blank=True, max_length=10, help_text='Opcja', verbose_name='Drugie imię ')
-    email = models.EmailField('email adress', unique=True)
-    first_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Imię')
-    last_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Nazwisko')
     # USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['pesel','first_name']
 
