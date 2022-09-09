@@ -6,6 +6,9 @@ from django.db.models import Q
 from django.db.transaction import TransactionManagementError
 from django.utils import timezone
 from django.core.exceptions import  NON_FIELD_ERRORS
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.models import User
+
 
 # Create your models here.
 
@@ -17,7 +20,7 @@ import re
 from django import forms
 
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
 # Create your models here.
@@ -45,7 +48,7 @@ class School(models.Model):
 
 class Klasa(models.Model):
     name = models.CharField(max_length=100, verbose_name='klasa')
-    school = models.ForeignKey(School , on_delete=models.CASCADE)
+    school = models.ForeignKey(School , on_delete=models.CASCADE, verbose_name='szkoła')
 
     class Meta:
 
@@ -64,6 +67,7 @@ class Klasa(models.Model):
 
     def save(self):
         self.name = self.name.upper()
+        super(Klasa, self).save()
 
 
 
@@ -98,34 +102,38 @@ def f_pesel(nr):
                 status = True
             else:
                 raise ValidationError('Błedny pesel')
-                break
+
     else:
         status = False
         raise ValidationError('Błędny pesel')
 
+def number_id(name):
+        if User.objects.filter(username=name).exists():
+            raise ValidationError('Uzytkownik istnieje')
+
 
 class User(AbstractUser):
-    # username = models.CharField(max_length=30, unique=True, default=self.id, verbose_name='Nazwa użytkownika', help_text='Wymagany')
+
+
+    username = models.CharField(max_length=30, unique=True, verbose_name='Nazwa użytkownika',
+                                help_text='Wpisz unikalną nazwę')
     first_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Imię')
     second_name = models.CharField(null=True, blank=True, max_length=10, help_text='Opcja', verbose_name='Drugie imię ')
     last_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Nazwisko')
-
-    email = models.EmailField('email adress', unique=True, help_text='Wymagany')
-
     pesel = models.CharField(max_length=11, unique=True, validators=[
         MinLengthValidator(11), MaxLengthValidator(11), f_pesel], help_text='Wymagany')
+    email = models.EmailField('email adress', unique=True, help_text='Wymagany')
+
+
     # USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['pesel','first_name']
+    REQUIRED_FIELDS = ['pesel','first_name','email']
 
-    def nameusername(self):
-        account_all = User.objects.all().count()
-        return account_all +1
-
-    def save(self):
-        self.username = 'user' + str(self.nameusername())
-        super(User, self).save()
-
-
+    @receiver(pre_delete, sender=User)
+    def delete_user(sender, instance, **kwargs):
+        if instance.is_superuser:
+            raise PermissionDenied
+    def __str__(self):
+        return f'{str(self.last_name)} {str(self.first_name)}'
 
 
 
@@ -205,7 +213,7 @@ class Kandydat(models.Model):
         (0, 0),
         (3, 3),
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Kandydat')
     clas = models.ForeignKey(Klasa, null=True, on_delete=models.SET_NULL, verbose_name='Klasa')
     document = models.ForeignKey(Oryginal, null=True, on_delete=models.SET_NULL, verbose_name='Dokument')
     internat = models.BooleanField(default=False, verbose_name='Internat')
@@ -247,8 +255,9 @@ class Kandydat(models.Model):
         # self.user.second_name = (list(self.user.second_name)[0]).upper() + str(''.join(list(self.user.second_name[1:])).lower())
         # if self.user.second_name != '':
         #     self.user.second_name = (list(self.user.second_name)[0]).upper() + str(''.join(list(self.user.second_name[1:])).lower())
-        if self.user == None:
-            print('None user')
+        # self.user= 'user'+str(number_id(self))
+        # if self.user == None:
+        #     print('None user')
 
         super(Kandydat, self).save()
 

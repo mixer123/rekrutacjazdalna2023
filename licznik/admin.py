@@ -29,13 +29,25 @@ class KandydatInline(admin.TabularInline):
     exclude = ['last_login']
 # @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['username']
-    readonly_fields = ['username']
-    exclude = ['last_login','is_superuser','groups','password']
+    list_display = ['username', 'first_name','last_name','pesel']
+    # readonly_fields = ['username']
+    exclude = ['last_login','groups','password']
     inlines = [
         KandydatInline,
     ]
-admin.site.register(User, UserAdmin)
+
+
+class MyUserAdmin(UserAdmin):
+
+    def has_delete_permission(self, request, obj=None):
+       if obj is None:
+           return True
+       else:
+           # raise ValidationError('Nie wolno')
+
+          return not obj.is_superuser
+# admin.site.unregister(User)
+admin.site.register(User, MyUserAdmin)
 
 class KlasaAdmin(admin.ModelAdmin):
     list_display = ['name','school']
@@ -58,7 +70,7 @@ class OcenaAdmin(admin.ModelAdmin):
 
 admin.site.register(Ocena, OcenaAdmin)
 
-admin.site.register(Upload)
+# admin.site.register(Upload)
 
 class KandydatResources(resources.ModelResource):
 
@@ -82,10 +94,12 @@ class ReadOnlyMixin(): # Add inheritance from "object" if using Python 2
 
 class KandydatAdmin(ReadOnlyMixin  ,ExportMixin, admin.ModelAdmin):
     # change_list_template = "admin/licznik/kandydat/post_changelist.html"
+    def has_add_permission(self, request, obj=None):
+        return False
 
     list_display = ['user','document', 'clas','suma_pkt']
     search_fields = ['user__last_name', 'user__pesel','document__name','user__first_name','user__second_name','user__last_name','clas__name']
-    list_filter = ['document', 'clas']
+    list_filter = ['document', 'clas','clas__school']
     readonly_fields = ['user']
     resource_class = KandydatResources
     list_per_page = 20
@@ -164,4 +178,4 @@ class SchoolAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 admin.site.register(School, SchoolAdmin)
-admin.site.register(Status)
+# admin.site.register(Status)

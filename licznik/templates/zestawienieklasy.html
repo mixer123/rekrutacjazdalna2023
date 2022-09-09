@@ -16,6 +16,23 @@
              {{ kan }}
         {% endfor %}
         <br>
+    {% endfor %}
+
+<h2>Lista kandydatów z kopiami świadectwami</h2><br>
+
+    {% for c in list_candidates_kopia %}
+        {% for kan in c %}
+             {{ kan }}
+        {% endfor %}
+        <br>
+    {% endfor %}
+<h2>Lista kandydatów z  podaniami</h2><br>
+
+    {% for c in list_candidates_podanie %}
+        {% for kan in c %}
+             {{ kan }}
+        {% endfor %}
+        <br>
 
     {% endfor %}
 

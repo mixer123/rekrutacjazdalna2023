@@ -31,6 +31,7 @@ class UserCreationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
+        user.pesel = self.cleaned_data["pesel"]
         user.email = self.cleaned_data["email"]
         user.username = self.cleaned_data["username"]
         user.first_name = self.cleaned_data["first_name"]
@@ -38,7 +39,7 @@ class UserCreationForm(UserCreationForm):
         user.last_name = self.cleaned_data["last_name"]
         user.password1 = self.cleaned_data["password1"]
         user.password2 = self.cleaned_data["password2"]
-        user.pesel = self.cleaned_data["pesel"]
+
         if commit:
             user.save()
         return user
@@ -49,4 +50,4 @@ class UserChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm):
         model = User
-        fields = ('username', 'email', 'first_name', 'second_name', 'pesel')
+        fields = ('username','pesel', 'email', 'first_name', 'second_name')
