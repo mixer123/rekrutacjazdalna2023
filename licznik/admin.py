@@ -29,13 +29,14 @@ class KandydatInline(admin.TabularInline):
     exclude = ['last_login']
 # @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    # Pole username jest readonly gdy uaktualizujemy obiekt. Gdy tworzymy nowy to jest edytowalne
     def get_readonly_fields(self, request, obj=None):
         if obj:
             return ["username"]
         else:
             return []
-    list_display = ['username', 'first_name','last_name','pesel']
-    readonly_fields = ['username']
+    list_display = [ 'first_name','last_name','pesel']
+    # readonly_fields = ['username']
     exclude = ['username','last_login','groups','password']
     inlines = [
         KandydatInline,

@@ -112,9 +112,9 @@ def number_id(name):
             raise ValidationError('Uzytkownik istnieje')
 
 
-def last_user_id():
-    last_id=User.objects.all().last().id
-    return last_id
+# def last_user_id():
+#     last_id=User.objects.all().last().id
+#     return last_id
 class User(AbstractUser):
 
 
@@ -140,7 +140,7 @@ class User(AbstractUser):
     def __str__(self):
         return f'{str(self.last_name)} {str(self.first_name)}'
 
-    def save(self):
+    def savel(self):
 
             self.username = 'user'+str(self.pesel )
             super(User, self).save()
@@ -224,8 +224,7 @@ class Kandydat(models.Model):
         (0, 0),
         (3, 3),
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Kandydat',
-                                default=str('user'))
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Kandydat')
     clas = models.ForeignKey(Klasa, null=True, on_delete=models.SET_NULL, verbose_name='Klasa')
     document = models.ForeignKey(Oryginal, null=True, on_delete=models.SET_NULL, verbose_name='Dokument')
     internat = models.BooleanField(default=False, verbose_name='Internat')

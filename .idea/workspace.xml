@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/views.py" afterDir="false" />
     </list>

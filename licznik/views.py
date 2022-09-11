@@ -386,7 +386,7 @@ def zestawienieklasy(request):
     candidates_kopia = []
     for c in clas:
         kand_kopia = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_kopia).
-                         values('clas__name', 'user__last_name', 'user__first_name', 'user__pesel') \
+                         values('clas__school__name','clas__name', 'user__last_name', 'user__first_name', 'user__pesel') \
                          .order_by('clas__name', 'user__last_name'))
 
         candidates_kopia.append(kand_kopia)
@@ -401,7 +401,7 @@ def zestawienieklasy(request):
     candidates_podanie = []
     for c in clas:
         kand_podanie = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_podanie).
-                          values('clas__name', 'user__last_name', 'user__first_name', 'user__pesel') \
+                          values('clas__school__name','clas__name', 'user__last_name', 'user__first_name', 'user__pesel') \
                           .order_by('clas__name', 'user__last_name'))
 
         candidates_podanie.append(kand_podanie)
