@@ -112,6 +112,9 @@ def number_id(name):
             raise ValidationError('Uzytkownik istnieje')
 
 
+def last_user_id():
+    last_id=User.objects.all().last().id
+    return last_id
 class User(AbstractUser):
 
 
@@ -128,12 +131,20 @@ class User(AbstractUser):
     # USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['pesel','first_name','email']
 
+
+   # Blokada usuniecia konta admin
     @receiver(pre_delete, sender=User)
     def delete_user(sender, instance, **kwargs):
         if instance.is_superuser:
             raise PermissionDenied
     def __str__(self):
         return f'{str(self.last_name)} {str(self.first_name)}'
+
+    def save(self):
+
+            self.username = 'user'+str(self.pesel )
+            super(User, self).save()
+
 
 
 
@@ -213,7 +224,8 @@ class Kandydat(models.Model):
         (0, 0),
         (3, 3),
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Kandydat')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Kandydat',
+                                default=str('user'))
     clas = models.ForeignKey(Klasa, null=True, on_delete=models.SET_NULL, verbose_name='Klasa')
     document = models.ForeignKey(Oryginal, null=True, on_delete=models.SET_NULL, verbose_name='Dokument')
     internat = models.BooleanField(default=False, verbose_name='Internat')
@@ -255,7 +267,8 @@ class Kandydat(models.Model):
         # self.user.second_name = (list(self.user.second_name)[0]).upper() + str(''.join(list(self.user.second_name[1:])).lower())
         # if self.user.second_name != '':
         #     self.user.second_name = (list(self.user.second_name)[0]).upper() + str(''.join(list(self.user.second_name[1:])).lower())
-        # self.user= 'user'+str(number_id(self))
+        # if not self.user.exists():
+        #     self.user= 'user'+str(number_id(self))
         # if self.user == None:
         #     print('None user')
 

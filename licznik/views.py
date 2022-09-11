@@ -364,16 +364,16 @@ def zestawienieklasy(request):
 
     clas = Klasa.objects.filter(school_id=School.objects.get(name=request.GET['schools']).id)
     for c in clas:
-        print('clas',c.name, c.id)
+        print('clas',c.name, c.id, c.school.name)
     doc_oryg = get_object_or_404(Oryginal, name='ORYGINAL')
     doc_kopia = get_object_or_404(Oryginal, name='KOPIA')
     doc_podanie = get_object_or_404(Oryginal, name='PODANIE')
     candidates = []
     for c in clas:
         kand_oryg = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).
-                         values('clas__name','user__last_name','user__first_name','user__pesel')\
+                         values('clas__school__name','clas__name','user__last_name','user__first_name','user__pesel')\
                          .order_by('clas__name','user__last_name'))
-        print('kand_oryg ', kand_oryg) # !!! To jest cala klasa !!!
+        # print('kand_oryg ', kand_oryg) # !!! To jest cala klasa !!!
         candidates.append(kand_oryg)
     # candidates lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
     # Teraz zrobię liste list
@@ -413,8 +413,9 @@ def zestawienieklasy(request):
             for k in c:
                 list_candidates_podanie.append(list(k.values()))
 
-
-    return render(request, 'zestawienieklasy.html', {'kand_oryg':kand_oryg, 'clas':clas,'list_candidates':list_candidates,'list_candidates_kopia':list_candidates_kopia,'list_candidates_podanie':list_candidates_podanie})
+    if len(list_candidates) > 0 or len(list_candidates_podanie) >0 or len(list_candidates_kopia)>0 :
+        return render(request, 'zestawienieklasy.html', {'kand_oryg':kand_oryg, 'clas':clas,'list_candidates':list_candidates,'list_candidates_kopia':list_candidates_kopia,'list_candidates_podanie':list_candidates_podanie})
+    return render(request, 'zestawienieklasy.html')
 
 @login_required(login_url='login-page')
 def zestawienie(request):

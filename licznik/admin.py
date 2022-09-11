@@ -29,9 +29,14 @@ class KandydatInline(admin.TabularInline):
     exclude = ['last_login']
 # @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ["username"]
+        else:
+            return []
     list_display = ['username', 'first_name','last_name','pesel']
-    # readonly_fields = ['username']
-    exclude = ['last_login','groups','password']
+    readonly_fields = ['username']
+    exclude = ['username','last_login','groups','password']
     inlines = [
         KandydatInline,
     ]
@@ -92,15 +97,22 @@ class ReadOnlyMixin(): # Add inheritance from "object" if using Python 2
 
 
 
-class KandydatAdmin(ReadOnlyMixin  ,ExportMixin, admin.ModelAdmin):
+class KandydatAdmin(ExportMixin, admin.ModelAdmin):
     # change_list_template = "admin/licznik/kandydat/post_changelist.html"
+    #Wyłaczenie dodawania kandydata
     def has_add_permission(self, request, obj=None):
-        return False
+        return True
+    # Pole user będzie readonly gdy obiekt jest aktualizowany gdy tworzę nowy obiekt to  będzie edytowalne
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ["user"]
+        else:
+            return []
 
     list_display = ['user','document', 'clas','suma_pkt']
     search_fields = ['user__last_name', 'user__pesel','document__name','user__first_name','user__second_name','user__last_name','clas__name']
     list_filter = ['document', 'clas','clas__school']
-    readonly_fields = ['user']
+    # readonly_fields = ['user']
     resource_class = KandydatResources
     list_per_page = 20
 

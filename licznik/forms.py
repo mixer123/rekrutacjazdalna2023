@@ -29,8 +29,8 @@ class KandydatFormAdmin(forms.ModelForm):
     user_username = forms.CharField()
     class Meta:
         model = Kandydat
-        # fields = '__all__'
-        exclude = ["user"]
+        fields = '__all__'
+        # exclude = ["user"]
 
 
 
