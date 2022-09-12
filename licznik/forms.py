@@ -26,7 +26,7 @@ class KandydatFormAdmin(forms.ModelForm):
     user_secondname = forms.CharField()
     user_lastname = forms.CharField()
     user_pesel = forms.CharField()
-    user_username = forms.CharField()
+    # user_username = forms.CharField()
     class Meta:
         model = Kandydat
         fields = '__all__'

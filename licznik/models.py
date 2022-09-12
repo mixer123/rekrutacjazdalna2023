@@ -140,10 +140,10 @@ class User(AbstractUser):
     def __str__(self):
         return f'{str(self.last_name)} {str(self.first_name)}'
 
-    def savel(self):
-
-            self.username = 'user'+str(self.pesel )
-            super(User, self).save()
+    # def save(self):
+    #
+    #         self.username = 'user'+str(self.pesel )
+    #         super(User, self).save()
 
 
 

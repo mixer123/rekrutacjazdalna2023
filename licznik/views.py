@@ -282,7 +282,7 @@ def chooseclas(request):
 
 @login_required(login_url='/accounts/login')
 def zapisz(request):
-    user = get_object_or_404(User, username = request.user)
+    user = get_object_or_404(User, username = request.user.username)
     oceny = []
     for oc in Ocena.objects.all():
             oceny.append(oc.ocena)
@@ -340,7 +340,7 @@ def zmienclas(request):
 
 
     if stat.status == False or datecurrent > dateend or datecurrent < datestart:
-        patern = request.user
+        patern = request.user.username
         user = User.objects.get(username=patern)
         kandydat = get_object_or_404(Kandydat, user_id=user.id)
         list_kand_id = []
@@ -353,9 +353,9 @@ def zmienclas(request):
 
             return redirect('starting-page')
         return render(request, 'zmienclas.html', {'user': user, 'form': form,
-                                                  'datastart':stat.datastart,'dataend':stat.dataend})
+                                                  'datastart':stat.datastart,'dataend':stat.dataend,'checkstat':checkstat,'statusdate':statusdate})
     else:
-        return render(request, 'zmienclas.html')
+        return render(request, 'zmienclas.html',{'checkstat':checkstat,'statusdate':statusdate})
 
 
 
@@ -363,8 +363,8 @@ def zmienclas(request):
 def zestawienieklasy(request):
 
     clas = Klasa.objects.filter(school_id=School.objects.get(name=request.GET['schools']).id)
-    for c in clas:
-        print('clas',c.name, c.id, c.school.name)
+    # for c in clas:
+    #     print('clas',c.name, c.id, c.school.name)
     doc_oryg = get_object_or_404(Oryginal, name='ORYGINAL')
     doc_kopia = get_object_or_404(Oryginal, name='KOPIA')
     doc_podanie = get_object_or_404(Oryginal, name='PODANIE')
@@ -382,6 +382,7 @@ def zestawienieklasy(request):
         if len(c) !=0:
           for k in c:
             list_candidates.append(list(k.values()))
+    print(list_candidates)
 
     candidates_kopia = []
     for c in clas:
@@ -412,9 +413,10 @@ def zestawienieklasy(request):
         if len(c) != 0:
             for k in c:
                 list_candidates_podanie.append(list(k.values()))
-
+    kand_docum = Kandydat.objects.values('clas', 'document').annotate(m=Count('document')).values('clas__name', 'm',
+                                                                                                  'document__name').order_by('clas__name')
     if len(list_candidates) > 0 or len(list_candidates_podanie) >0 or len(list_candidates_kopia)>0 :
-        return render(request, 'zestawienieklasy.html', {'kand_oryg':kand_oryg, 'clas':clas,'list_candidates':list_candidates,'list_candidates_kopia':list_candidates_kopia,'list_candidates_podanie':list_candidates_podanie})
+        return render(request, 'zestawienieklasy.html', {'kand_docum': kand_docum,'kand_oryg':kand_oryg, 'clas':list(clas)[0],'list_candidates':list_candidates,'list_candidates_kopia':list_candidates_kopia,'list_candidates_podanie':list_candidates_podanie})
     return render(request, 'zestawienieklasy.html')
 
 @login_required(login_url='login-page')

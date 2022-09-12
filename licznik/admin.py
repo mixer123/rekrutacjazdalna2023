@@ -37,13 +37,14 @@ class UserAdmin(admin.ModelAdmin):
             return []
     list_display = [ 'first_name','last_name','pesel']
     # readonly_fields = ['username']
-    exclude = ['username','last_login','groups','password']
+    exclude = ['username','last_login','groups','password','superuser','is_superuser','date_joined']
     inlines = [
         KandydatInline,
     ]
 
 
 class MyUserAdmin(UserAdmin):
+
 
     def has_delete_permission(self, request, obj=None):
        if obj is None:

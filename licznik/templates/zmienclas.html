@@ -12,14 +12,19 @@ Zmień dane użytkownika
 
 {{ user }}
 
+{% if  checkstat or not  statusdate %}
 
-<form  method = 'POST' enctype="multipart/form-data">
+Zablokowano wybór klasy.
+{% else %}
+    <form  method = 'POST' enctype="multipart/form-data">
         {% csrf_token %}
         <table>
             {{ form.as_table }}
         </table>
         <button type="submit" class="btn btn-lg btn-warning">Submit</button>
     </form>
+{% endif %}
+
 
 {% if messages %}
    {% for message in messages %}
