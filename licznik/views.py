@@ -282,7 +282,7 @@ def chooseclas(request):
 
 @login_required(login_url='/accounts/login')
 def zapisz(request):
-    user = get_object_or_404(User, username = request.user)
+    user = get_object_or_404(User, username = request.user.username)
     oceny = []
     for oc in Ocena.objects.all():
             oceny.append(oc.ocena)
@@ -340,7 +340,7 @@ def zmienclas(request):
 
 
     if stat.status == False or datecurrent > dateend or datecurrent < datestart:
-        patern = request.user
+        patern = request.user.username
         user = User.objects.get(username=patern)
         kandydat = get_object_or_404(Kandydat, user_id=user.id)
         list_kand_id = []
@@ -353,9 +353,9 @@ def zmienclas(request):
 
             return redirect('starting-page')
         return render(request, 'zmienclas.html', {'user': user, 'form': form,
-                                                  'datastart':stat.datastart,'dataend':stat.dataend})
+                                                  'datastart':stat.datastart,'dataend':stat.dataend,'checkstat':checkstat,'statusdate':statusdate})
     else:
-        return render(request, 'zmienclas.html')
+        return render(request, 'zmienclas.html',{'checkstat':checkstat,'statusdate':statusdate})
 
 
 
@@ -363,46 +363,62 @@ def zmienclas(request):
 def zestawienieklasy(request):
 
     clas = Klasa.objects.filter(school_id=School.objects.get(name=request.GET['schools']).id)
-    for c in clas:
-        print('clas',c.name, c.id)
+    # for c in clas:
+    #     print('clas',c.name, c.id, c.school.name)
     doc_oryg = get_object_or_404(Oryginal, name='ORYGINAL')
     doc_kopia = get_object_or_404(Oryginal, name='KOPIA')
     doc_podanie = get_object_or_404(Oryginal, name='PODANIE')
-    # kand_oryg = Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).values()
     candidates = []
     for c in clas:
         kand_oryg = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).
-                         values('clas__name','user__last_name','user__first_name','user__pesel')\
+                         values('clas__school__name','clas__name','user__last_name','user__first_name','user__pesel')\
                          .order_by('clas__name','user__last_name'))
-        print('kand_oryg ', kand_oryg) # !!! To jest cala klasa !!!
+        # print('kand_oryg ', kand_oryg) # !!! To jest cala klasa !!!
         candidates.append(kand_oryg)
-
-
-    print('candidates ', candidates) # lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
+    # candidates lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
     # Teraz zrobię liste list
     list_candidates =[]
     for c in candidates:
         if len(c) !=0:
-            print('el ',c,'end line' )
+          for k in c:
+            list_candidates.append(list(k.values()))
+    print(list_candidates)
+
+    candidates_kopia = []
+    for c in clas:
+        kand_kopia = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_kopia).
+                         values('clas__school__name','clas__name', 'user__last_name', 'user__first_name', 'user__pesel') \
+                         .order_by('clas__name', 'user__last_name'))
+
+        candidates_kopia.append(kand_kopia)
+    # candidates lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
+    # Teraz zrobię liste list
+    list_candidates_kopia = []
+    for c in candidates_kopia:
+        if len(c) != 0:
             for k in c:
-                print('kan ',list(k.values()))
-                list_candidates.append(list(k.values()))
-    print('list_candidates ',list_candidates)
+                list_candidates_kopia.append(list(k.values()))
 
+    candidates_podanie = []
+    for c in clas:
+        kand_podanie = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_podanie).
+                          values('clas__school__name','clas__name', 'user__last_name', 'user__first_name', 'user__pesel') \
+                          .order_by('clas__name', 'user__last_name'))
 
-
-    # kand_oryg = Kandydat.objects.filter(clas=clas,document=doc_oryg).values('user__last_name','user__first_name','user__pesel')\
-    #     .order_by('-document__name','user__last_name')
-    # kand_oryg_il = kand_oryg.count()
-    kand_kopia = Kandydat.objects.filter(clas=clas, document=doc_kopia).values('user__last_name', 'user__first_name',
-                                                                             'user__pesel') \
-        .order_by('-document__name', 'user__last_name')
-    # kand_kopia_il = kand_kopia.count()
-    kand_podanie = Kandydat.objects.filter(clas=clas, document=doc_podanie).values('user__last_name', 'user__first_name',
-                                                                             'user__pesel') \
-        .order_by('-document__name', 'user__last_name')
-    # kand_podanie_il = kand_podanie.count()
-    return render(request, 'zestawienieklasy.html', {'kand_oryg':kand_oryg, 'clas':clas,'list_candidates':list_candidates})
+        candidates_podanie.append(kand_podanie)
+    # candidates lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
+    # Teraz zrobię liste list
+    list_candidates_podanie = []
+    for c in candidates_podanie:
+        if len(c) != 0:
+            for k in c:
+                list_candidates_podanie.append(list(k.values()))
+    kand_docum = Kandydat.objects.values('clas', 'document').annotate(m=Count('document')).values('clas__name', 'm',
+                                                                                                  'document__name','clas__school__name').order_by('document__name','clas__name')
+    print('kand_docum',kand_docum)
+    if len(list_candidates) > 0 or len(list_candidates_podanie) >0 or len(list_candidates_kopia)>0 :
+        return render(request, 'zestawienieklasy.html', {'kand_docum': kand_docum,'kand_oryg':kand_oryg, 'clas':list(clas)[0],'list_candidates':list_candidates,'list_candidates_kopia':list_candidates_kopia,'list_candidates_podanie':list_candidates_podanie})
+    return render(request, 'zestawienieklasy.html')
 
 @login_required(login_url='login-page')
 def zestawienie(request):
@@ -467,7 +483,7 @@ def uploadfile(request):
                 return redirect('/')
         else:
             form = UploadForm() # A empty, unbound form
-    except IndexError:
+    except Exception:
         return render(request, 'errorupload.html')
 
     # Load documents for the list page

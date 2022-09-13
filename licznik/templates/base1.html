@@ -34,7 +34,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
-                        {% if request.user.is_superuser %}
+                        {% if request.user.is_staff %}
                             <li class="nav-item">
                               <a class="nav-link active" aria-current="page" href="/admin/">Administracja</a>
                             </li>
@@ -47,23 +47,23 @@
                                   <a class="nav-link active" aria-current="page" href="/registration/">Rejestracja</a>
                                 </li>
                          {%  endif %}
-                        {% if request.user.is_superuser %}
+                        {% if request.user.is_staff %}
                              <li class="nav-item">
                               <a class="nav-link active" aria-current="page" href="/zestawienie/">Zestawienie</a>
                              </li>
                         {%  endif %}
 
-                        {% if not request.user.is_superuser and  request.user.is_authenticated %}
+                        {% if not request.user.is_staff and  request.user.is_authenticated %}
                             <li class="nav-item">
                               <a class="nav-link active" aria-current="page" href="/zmiendane/">Zmień dane</a>
                             </li>
                          {%  endif %}
-                        {% if not request.user.is_superuser and  request.user.is_authenticated  %}
+                        {% if not request.user.is_staff and  request.user.is_authenticated  %}
                             <li class="nav-item">
                               <a class="nav-link active" aria-current="page" href="/zmienklase/">Zmień klasę</a>
                             </li>
                           {%  endif %}
-                         {% if request.user.is_superuser  %}
+                         {% if request.user.is_staff  %}
                             <li class="nav-item">
                               <a class="nav-link active" aria-current="page" href="/zmienstatus/">Zmien status</a>
                             </li>
