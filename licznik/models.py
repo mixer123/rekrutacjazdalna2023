@@ -120,6 +120,7 @@ class User(AbstractUser):
 
     username = models.CharField(max_length=30, unique=True, verbose_name='Nazwa użytkownika',
                                 help_text='Wpisz unikalną nazwę')
+
     first_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Imię')
     second_name = models.CharField(null=True, blank=True, max_length=10, help_text='Opcja', verbose_name='Drugie imię ')
     last_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Nazwisko')
@@ -140,9 +141,8 @@ class User(AbstractUser):
     def __str__(self):
         return f'{str(self.last_name)} {str(self.first_name)}'
 
-    def save(self):
-            self.username = 'user'+str(self.pesel )
-            super(User, self).save()
+
+
 
 
 

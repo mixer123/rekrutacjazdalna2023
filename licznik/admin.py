@@ -13,6 +13,7 @@ from django.contrib import admin
 from import_export.fields import Field
 from import_export.forms import ImportForm, ConfirmImportForm
 
+from .forms import UserForm
 from .models import *
 from import_export.admin import ImportExportMixin
 from import_export.admin import ImportExportActionModelAdmin
@@ -29,6 +30,7 @@ class KandydatInline(admin.TabularInline):
     exclude = ['last_login']
 # @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    form = UserForm
     # Pole username jest readonly gdy uaktualizujemy obiekt. Gdy tworzymy nowy to jest edytowalne
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -37,7 +39,7 @@ class UserAdmin(admin.ModelAdmin):
             return []
     list_display = ['username', 'first_name','last_name','pesel']
     # readonly_fields = ['username']
-    exclude = ['username','last_login','groups','password','superuser','is_superuser','date_joined']
+    exclude = ['last_login','groups','superuser','is_superuser','date_joined']
     inlines = [
         KandydatInline,
     ]
