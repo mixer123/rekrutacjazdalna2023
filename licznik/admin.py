@@ -13,6 +13,7 @@ from django.contrib import admin
 from import_export.fields import Field
 from import_export.forms import ImportForm, ConfirmImportForm
 
+from .forms import UserForm
 from .models import *
 from import_export.admin import ImportExportMixin
 from import_export.admin import ImportExportActionModelAdmin
@@ -29,23 +30,30 @@ class KandydatInline(admin.TabularInline):
     exclude = ['last_login']
 # @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    form = UserForm
     # Pole username jest readonly gdy uaktualizujemy obiekt. Gdy tworzymy nowy to jest edytowalne
     def get_readonly_fields(self, request, obj=None):
         if obj:
             return ["username"]
         else:
             return []
-    list_display = [ 'first_name','last_name','pesel']
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        is_superuser = request.user.is_superuser
+
+        if not is_superuser:
+            form.base_fields['password'].disabled = False
+
+        return form
+    list_display = ['username', 'first_name','last_name','pesel']
     # readonly_fields = ['username']
-    exclude = ['username','last_login','groups','password','superuser','is_superuser','date_joined']
+    exclude = ['last_login','groups','superuser','is_superuser','date_joined']
     inlines = [
         KandydatInline,
     ]
 
 
 class MyUserAdmin(UserAdmin):
-
-
     def has_delete_permission(self, request, obj=None):
        if obj is None:
            return True
@@ -53,7 +61,7 @@ class MyUserAdmin(UserAdmin):
            # raise ValidationError('Nie wolno')
 
           return not obj.is_superuser
-# admin.site.unregister(User)
+
 admin.site.register(User, MyUserAdmin)
 
 class KlasaAdmin(admin.ModelAdmin):
@@ -101,13 +109,16 @@ class ReadOnlyMixin(): # Add inheritance from "object" if using Python 2
 
 class KandydatAdmin(ExportMixin, admin.ModelAdmin):
     # change_list_template = "admin/licznik/kandydat/post_changelist.html"
-    #Wyłaczenie dodawania kandydata
+    #Wyłaczenie dodawania kandydata ustaw na False
+
     def has_add_permission(self, request, obj=None):
         return True
+
+
     # Pole user będzie readonly gdy obiekt jest aktualizowany gdy tworzę nowy obiekt to  będzie edytowalne
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return ["user"]
+            return ['user']
         else:
             return []
 

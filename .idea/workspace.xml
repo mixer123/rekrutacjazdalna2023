@@ -2,10 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57e25f23-2a35-47fd-af5f-e2a7a3f1d760" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/licznik/templates/errorkandydat.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/licznik/templates/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/templates/index1.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/index1.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/templates/zestawienieklasy.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/zestawienieklasy.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rekrutacjazdalna2023/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/rekrutacjazdalna2023/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rekrutacjazdalna2023/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/rekrutacjazdalna2023/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

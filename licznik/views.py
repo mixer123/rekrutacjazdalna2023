@@ -35,41 +35,35 @@ from django.conf import settings
 # User = settings.AUTH_USER_MODEL
 
 from .forms import UserForm
-# from .tokens import account_activation_token
 
-#
-#
-# def signup(request):
-#     if request.method == 'POST':
-#         form = UserForm(request.POST)
-#         if form.is_valid():
-#             # save form in the memory not in database
-#             user = form.save(commit=False)
-#             user.is_active = False
-#             user.save()
-#             # to get the domain of the current site
-#             current_site = get_current_site(request)
-#             mail_subject = 'Activation link has been sent to your email id'
-#             message = render_to_string('acc_activation_email.html', {
-#                 'user': user,
-#                 'domain': current_site.domain,
-#                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-#                 'token': account_activation_token.make_token(user),
-#             })
-#             # message='Rejestracja wykonana. Aktywuj konto.'
-#             to_email = form.cleaned_data.get('email')
-#             email = EmailMessage(
-#                 mail_subject, message, to=[to_email]
-#             )
-#             email.send()
-#             return HttpResponse('Please confirm your email address to complete the registration')
-#     else:
-#         form = UserForm()
-#     return render(request, 'signup.html', {'form': form})
+
+def user_login(request):
+    if request.method == 'POST':
+        print('statue', request.POST['statue'])
+        form = UserLoginForm(request, data=request.POST)
+
+        if form.is_valid():
+
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            # statue = form.cleaned_data['statue']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+
+                status = False
+                login(request, user)
+
+                return redirect('/')
+        else:
+           print("fail")
+    form = UserLoginForm()
+
+    return render(request, 'login.html', {'form': form})
+
 
 def signup(request):
     if request.method == 'POST':
-        form = UserForm(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
             # save form in the memory not in database
             user = form.save(commit=False)
@@ -93,7 +87,7 @@ def signup(request):
             return render(request, 'confemail.html',{'message':message})
 
     else:
-        form = UserForm()
+        form = RegistrationForm()
     return render(request, 'signup.html', {'form': form})
 def activate(request, uidb64, token):
         User = get_user_model()
@@ -110,29 +104,6 @@ def activate(request, uidb64, token):
         else:
             messages.warning(request, 'Link uszkodzony')
             return render(request, 'invalidlink.html')
-# def activate(request, uidb64, token):
-#     User = get_user_model()
-#     try:
-#         uid = force_text(urlsafe_base64_decode(uidb64))
-#         user = User.objects.get(pk=uid)
-#     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-#         user = None
-#     if user is not None and account_activation_token.check_token(user, token):
-#         user.is_active = True
-#         user.save()
-#         return HttpResponse('Teraz możesz zalogować się')
-#         uid = force_text(urlsafe_base64_decode(uidb64))
-#         user = User.objects.get(pk=uid)
-#     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-#         user = None
-#     if user is not None and account_activation_token.check_token(user, token):
-#         user.is_active = True
-#         user.save()
-#         messages.success(request, 'Konto aktywne')
-#         return render(request, 'confemailthx.html',{'messages':messages})
-#     else:
-#         messages.error(request, 'Link uszkodzony')
-#         return render(request, 'confemailerror.html',{'messages':messages})
 
 @login_required(login_url='/accounts/login')
 def readposts(request):
@@ -140,20 +111,13 @@ def readposts(request):
     return render(request, 'readposts.html',{'allposts':allposts})
 
 def starting_page(request):
-    patern = request.user.username
-
     if request.user.is_authenticated:
         patern = request.user.username
-
-
-
         user = User.objects.get(username= patern)
         kandydat = Kandydat(user_id=user.id)
-
         list_kand_id =[]
         for i in Kandydat.objects.all():
             list_kand_id.append(i.user_id)
-
         if user.id in  list_kand_id:
             return render(request, 'index1.html', {'kandydat': kandydat})
         else:
@@ -170,21 +134,16 @@ def zmienstatus(request):
             form = StatusForm(request.POST or None)
             if form.is_valid():
                 stat = Status(status=form.cleaned_data['status'],datastart=form.cleaned_data['datastart'],dataend=form.cleaned_data['dataend'])
-
                 stat.save()
-
                 statobj = Status.objects.all().first()
-
                 checkstat = statobj.status
                 datestart = statobj.datastart
-
                 dateend = statobj.dataend
                 datecurrent = datetime.date.today()
                 if datecurrent > dateend or datecurrent < datestart:
                     statusdate = False
                 else:
                     statusdate = True
-
                 if checkstat or not statusdate:
                     messages.warning(request, 'Zablokowano aktualizację ocen / punktów dla kandydata')
                     message='Zablokowano aktualizację ocen / punktów dla kandydata'
@@ -336,9 +295,6 @@ def zmienclas(request):
         messages.warning(request, 'Zablokowano aktualizację ocen / punktów dla kandydata')
     else:
         messages.warning(request, 'Odblokowano aktualizację ocen / punktów dla kandydata')
-
-
-
     if stat.status == False or datecurrent > dateend or datecurrent < datestart:
         patern = request.user.username
         user = User.objects.get(username=patern)
@@ -350,7 +306,6 @@ def zmienclas(request):
         form = KandydatForm(request.POST or None, instance=kandydat)
         if form.is_valid():
             form.save()
-
             return redirect('starting-page')
         return render(request, 'zmienclas.html', {'user': user, 'form': form,
                                                   'datastart':stat.datastart,'dataend':stat.dataend,'checkstat':checkstat,'statusdate':statusdate})
@@ -361,60 +316,62 @@ def zmienclas(request):
 
 @login_required(login_url='login-page')
 def zestawienieklasy(request):
+    try:
+        clas = Klasa.objects.filter(school_id=School.objects.get(name=request.GET['schools']).id)
+        # for c in clas:
+        #     print('clas',c.name, c.id, c.school.name)
+        doc_oryg = get_object_or_404(Oryginal, name='ORYGINAL')
+        doc_kopia = get_object_or_404(Oryginal, name='KOPIA')
+        doc_podanie = get_object_or_404(Oryginal, name='PODANIE')
+        candidates = []
+        for c in clas:
+            kand_oryg = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).
+                             values('clas__school__name','clas__name','user__last_name','user__first_name','user__pesel')\
+                             .order_by('clas__name','user__last_name'))
+            # print('kand_oryg ', kand_oryg) # !!! To jest cala klasa !!!
+            candidates.append(kand_oryg)
+        # candidates lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
+        # Teraz zrobię liste list
+        list_candidates =[]
+        for c in candidates:
+            if len(c) !=0:
+              for k in c:
+                list_candidates.append(list(k.values()))
+        print(list_candidates)
 
-    clas = Klasa.objects.filter(school_id=School.objects.get(name=request.GET['schools']).id)
-    # for c in clas:
-    #     print('clas',c.name, c.id, c.school.name)
-    doc_oryg = get_object_or_404(Oryginal, name='ORYGINAL')
-    doc_kopia = get_object_or_404(Oryginal, name='KOPIA')
-    doc_podanie = get_object_or_404(Oryginal, name='PODANIE')
-    candidates = []
-    for c in clas:
-        kand_oryg = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_oryg).
-                         values('clas__school__name','clas__name','user__last_name','user__first_name','user__pesel')\
-                         .order_by('clas__name','user__last_name'))
-        # print('kand_oryg ', kand_oryg) # !!! To jest cala klasa !!!
-        candidates.append(kand_oryg)
-    # candidates lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
-    # Teraz zrobię liste list
-    list_candidates =[]
-    for c in candidates:
-        if len(c) !=0:
-          for k in c:
-            list_candidates.append(list(k.values()))
-    print(list_candidates)
+        candidates_kopia = []
+        for c in clas:
+            kand_kopia = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_kopia).
+                             values('clas__school__name','clas__name', 'user__last_name', 'user__first_name', 'user__pesel') \
+                             .order_by('clas__name', 'user__last_name'))
 
-    candidates_kopia = []
-    for c in clas:
-        kand_kopia = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_kopia).
-                         values('clas__school__name','clas__name', 'user__last_name', 'user__first_name', 'user__pesel') \
-                         .order_by('clas__name', 'user__last_name'))
+            candidates_kopia.append(kand_kopia)
+        # candidates lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
+        # Teraz zrobię liste list
+        list_candidates_kopia = []
+        for c in candidates_kopia:
+            if len(c) != 0:
+                for k in c:
+                    list_candidates_kopia.append(list(k.values()))
 
-        candidates_kopia.append(kand_kopia)
-    # candidates lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
-    # Teraz zrobię liste list
-    list_candidates_kopia = []
-    for c in candidates_kopia:
-        if len(c) != 0:
-            for k in c:
-                list_candidates_kopia.append(list(k.values()))
+        candidates_podanie = []
+        for c in clas:
+            kand_podanie = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_podanie).
+                              values('clas__school__name','clas__name', 'user__last_name', 'user__first_name', 'user__pesel') \
+                              .order_by('clas__name', 'user__last_name'))
 
-    candidates_podanie = []
-    for c in clas:
-        kand_podanie = list(Kandydat.objects.filter(clas=c.id).filter(document=doc_podanie).
-                          values('clas__school__name','clas__name', 'user__last_name', 'user__first_name', 'user__pesel') \
-                          .order_by('clas__name', 'user__last_name'))
-
-        candidates_podanie.append(kand_podanie)
-    # candidates lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
-    # Teraz zrobię liste list
-    list_candidates_podanie = []
-    for c in candidates_podanie:
-        if len(c) != 0:
-            for k in c:
-                list_candidates_podanie.append(list(k.values()))
-    kand_docum = Kandydat.objects.values('clas', 'document').annotate(m=Count('document')).values('clas__name', 'm',
-                                                                                                  'document__name').order_by('clas__name')
+            candidates_podanie.append(kand_podanie)
+        # candidates lista list słowników !!! TO jest cała szkoła !!!  Każda lista jest jedną klasą
+        # Teraz zrobię liste list
+        list_candidates_podanie = []
+        for c in candidates_podanie:
+            if len(c) != 0:
+                for k in c:
+                    list_candidates_podanie.append(list(k.values()))
+            kand_docum = Kandydat.objects.values('clas', 'document').annotate(m=Count('document')).values('clas__name', 'm','document__name','clas__school__name').order_by('document__name','clas__name')
+    except Exception:
+        messages.warning(request, 'Brak danych w systemie')
+        return render(request, 'errorkandydat.html')
     if len(list_candidates) > 0 or len(list_candidates_podanie) >0 or len(list_candidates_kopia)>0 :
         return render(request, 'zestawienieklasy.html', {'kand_docum': kand_docum,'kand_oryg':kand_oryg, 'clas':list(clas)[0],'list_candidates':list_candidates,'list_candidates_kopia':list_candidates_kopia,'list_candidates_podanie':list_candidates_podanie})
     return render(request, 'zestawienieklasy.html')
@@ -482,7 +439,7 @@ def uploadfile(request):
                 return redirect('/')
         else:
             form = UploadForm() # A empty, unbound form
-    except IndexError:
+    except Exception:
         return render(request, 'errorupload.html')
 
     # Load documents for the list page

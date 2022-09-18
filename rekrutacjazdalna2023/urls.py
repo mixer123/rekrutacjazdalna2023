@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("licznik.urls")),
-    path('accounts/', include('accounts.urls')),  # new
+    path('registration/', include('accounts.urls')),  # new
     path('accounts/', include('django.contrib.auth.urls')),
 
     # path('home/', TemplateView.as_view(template_name='licznik/home.html'), name='home'),

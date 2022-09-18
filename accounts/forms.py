@@ -1,28 +1,32 @@
 
 from django import forms
+from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from licznik.models import User
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV2Checkbox
 
 
 
-class UserCreationForm(UserCreationForm):
+class UserForm(UserCreationForm):
     first_name = forms.CharField(required=True, label='Pierwsze imię', help_text='Wymagany')
     second_name = forms.CharField(required=False, label='Drugie imię', help_text='Wymagany')
     last_name = forms.CharField(required=True, label='Nazwisko')
     pesel = forms.CharField(required=True, label='Pesel')
     email = forms.EmailField(required=True, label='Email')
     username = forms.CharField(required=True, label='Login')
+
     password1 = forms.CharField(
         label='Hasło',
         strip=False,
         widget=forms.PasswordInput,
-        # help_text=password_validation.password_validators_help_text_html(),
+        help_text=password_validation.password_validators_help_text_html(),
     )
     password2 = forms.CharField(
         label='Potwiedź hasło',
         strip=False,
         widget=forms.PasswordInput,
-        # help_text=password_validation.password_validators_help_text_html(),
+        help_text=password_validation.password_validators_help_text_html(),
     )
 
     class Meta:
@@ -30,7 +34,7 @@ class UserCreationForm(UserCreationForm):
         fields = ('first_name','second_name','last_name',"pesel",'username','email','password1','password2')
 
     def save(self, commit=True):
-        user = super(UserCreationForm, self).save(commit=False)
+        user = super(UserForm, self).save(commit=False)
         user.pesel = self.cleaned_data["pesel"]
         user.email = self.cleaned_data["email"]
         user.username = self.cleaned_data["username"]

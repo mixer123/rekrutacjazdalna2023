@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'licznik.apps.LicznikConfig',
     'accounts.apps.AccountsConfig',
     'import_export',
+    'captcha',
 ]
 
 
@@ -166,3 +167,7 @@ EMAIL_HOST_USER = 'biuro@ecompus.pl'
 EMAIL_HOST_PASSWORD = 'JkisFQRz9VyWc2$'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+RECAPTCHA_PUBLIC_KEY = '6LeR8gIiAAAAABQZMxq7bGAQ92JqIE9APo-8vKSg'
+RECAPTCHA_PRIVATE_KEY = '6LeR8gIiAAAAANWzolaHrjuJ99lrVErUBPEqm1ri'
+# RECAPTCHA_PROXY = {'http': 'http://127.0.0.1:8000', 'https': 'https://127.0.0.1:8000'}
