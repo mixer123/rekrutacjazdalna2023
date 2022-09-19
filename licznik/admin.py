@@ -13,7 +13,7 @@ from django.contrib import admin
 from import_export.fields import Field
 from import_export.forms import ImportForm, ConfirmImportForm
 
-from .forms import UserForm
+from .forms import UserForm, UserChangeForm
 from .models import *
 from import_export.admin import ImportExportMixin
 from import_export.admin import ImportExportActionModelAdmin
@@ -31,6 +31,7 @@ class KandydatInline(admin.TabularInline):
 # @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     form = UserForm
+    add_form = UserChangeForm
     # Pole username jest readonly gdy uaktualizujemy obiekt. Gdy tworzymy nowy to jest edytowalne
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -38,6 +39,14 @@ class UserAdmin(admin.ModelAdmin):
         else:
             return []
     def get_form(self, request, obj=None, **kwargs):
+        defaults = {}
+        if obj:
+            defaults['form'] = self.add_form
+
+        if obj is None:
+            defaults['form'] = self.form
+        defaults.update(kwargs)
+        return super().get_form(request, obj, **defaults)
         form = super().get_form(request, obj, **kwargs)
         is_superuser = request.user.is_superuser
 
@@ -47,7 +56,7 @@ class UserAdmin(admin.ModelAdmin):
         return form
     list_display = ['username', 'first_name','last_name','pesel']
     # readonly_fields = ['username']
-    exclude = ['last_login','groups','superuser','is_superuser','date_joined']
+    exclude = ['last_login','groups','date_joined']
     inlines = [
         KandydatInline,
     ]
@@ -203,4 +212,4 @@ class SchoolAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 admin.site.register(School, SchoolAdmin)
-# admin.site.register(Status)
+admin.site.register(Status)

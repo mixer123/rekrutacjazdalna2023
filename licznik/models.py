@@ -119,7 +119,7 @@ class User(AbstractUser):
 
 
     username = models.CharField(max_length=30, unique=True, verbose_name='Nazwa użytkownika',
-                                help_text='Wpisz unikalną nazwę')
+                                help_text='Unikalna nazwa')
 
     first_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Imię')
     second_name = models.CharField(null=True, blank=True, max_length=10, help_text='Opcja', verbose_name='Drugie imię ')

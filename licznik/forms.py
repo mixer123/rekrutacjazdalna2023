@@ -67,8 +67,8 @@ class RegistrationForm(UserCreationForm):
 
 # class UserForm(UserCreationForm):
 
-class UserForm(forms.ModelForm):
-    password = forms.CharField(label='Hasło', widget=forms.PasswordInput,help_text='Wymagany.')
+class UserForm(UserCreationForm):
+    password1 = forms.CharField(label='Hasło', widget=forms.PasswordInput,help_text='Wymagany.')
     password2 = forms.CharField(label='Potwierdż hasło', widget=forms.PasswordInput,help_text='Wymagany.')
     # password1 = None
     # password2 = None
@@ -79,7 +79,21 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
+        fields = ['username','first_name','second_name','last_name','email','pesel','is_superuser']
+class UserChangeForm(forms.ModelForm):
+    # password = forms.CharField(label='Hasło', widget=forms.PasswordInput,help_text='Wymagany.')
+    # password2 = forms.CharField(label='Potwierdż hasło', widget=forms.PasswordInput,help_text='Wymagany.')
+    # password1 = None
+    # password2 = None
+    email = forms.EmailField(max_length=254, help_text='Wymagany.')
+
+
+
+
+    class Meta:
+        model = User
         fields = ['username','first_name','second_name','last_name','email','pesel']
+        exclude =['password1','password2','is_staff']
 
 
 class KandydatForm(forms.ModelForm):
