@@ -160,7 +160,7 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 's143.cyber-folks.pl'
+EMAIL_HOST = 'jakis host'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'jakis mail'
 EMAIL_HOST_PASSWORD = 'jakies hasło'
