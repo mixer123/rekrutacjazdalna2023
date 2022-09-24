@@ -4,12 +4,14 @@
 {% endblock %}
 
 {%block content %}
-<form method = "POST">
-     {% csrf_token %}
-    {{ form }}
+<div class="niezalogowany">
+    <form method = "POST">
+         {% csrf_token %}
+        {{ form.as_table }}
 
-    <input type = "submit" value = "Wyślij">
-</form>
+        <input type = "submit" value = "Wyślij">
+    </form>
+</div>
 
 <!--        <form method="post" action="">-->
 <!--            {% csrf_token %}-->

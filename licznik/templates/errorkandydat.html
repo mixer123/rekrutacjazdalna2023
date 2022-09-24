@@ -8,6 +8,10 @@ Kandydat
 
 
 {%block content %}
+
+<div class="niezalogowany">
+     Jesteś zalogowany <font color="blue"> {{ user.username }}!</font>Witaj {{ kandydat.user.first_name}}
+</div>
 {% if messages %}
    {% for message in messages %}
             <div class="container-fluid p-0">

@@ -1,62 +1,47 @@
-
-
-from django.http import HttpResponseRedirect
+from django.contrib.admin import display
 from django.urls import path
-from django.shortcuts import redirect
+
 from import_export import resources
-from import_export.admin import ExportMixin, ImportMixin
-from django.contrib import messages
-# from django_object_actions import DjangoObjectActions
-from django.urls import reverse
-# from admin_tools.menu import items, Menu
+from import_export.admin import ExportMixin
 from django.contrib import admin
 from import_export.fields import Field
-from import_export.forms import ImportForm, ConfirmImportForm
-
-from .forms import UserForm, UserChangeForm
+from .forms import UserForm, UserChangeForm, UserForm1, UserForm2
 from .models import *
-from import_export.admin import ImportExportMixin
-from import_export.admin import ImportExportActionModelAdmin
-from import_export.admin import ImportExportModelAdmin
-from django import forms
 from import_export.formats import base_formats
-from django.core.mail import send_mail
-from django.conf import settings
-import smtplib, ssl
 from django.core.mail import EmailMessage
-
+from django.forms import TextInput, Textarea
 class KandydatInline(admin.TabularInline):
     model = Kandydat
     exclude = ['last_login']
-# @admin.register(User)
+
 class UserAdmin(admin.ModelAdmin):
-    form = UserForm
-    add_form = UserChangeForm
+
+
+    form = UserForm2
+    add_form = UserForm1
     # Pole username jest readonly gdy uaktualizujemy obiekt. Gdy tworzymy nowy to jest edytowalne
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return ["username"]
+            return ["username","password"]
         else:
             return []
     def get_form(self, request, obj=None, **kwargs):
         defaults = {}
         if obj:
             defaults['form'] = self.add_form
-
         if obj is None:
             defaults['form'] = self.form
         defaults.update(kwargs)
-        return super().get_form(request, obj, **defaults)
+        # return super().get_form(request, obj, **defaults)
         form = super().get_form(request, obj, **kwargs)
         is_superuser = request.user.is_superuser
-
         if not is_superuser:
             form.base_fields['password'].disabled = False
-
         return form
+
     list_display = ['username', 'first_name','last_name','pesel']
-    # readonly_fields = ['username']
-    exclude = ['last_login','groups','date_joined']
+
+
     inlines = [
         KandydatInline,
     ]
@@ -71,7 +56,7 @@ class MyUserAdmin(UserAdmin):
 
           return not obj.is_superuser
 
-admin.site.register(User, MyUserAdmin)
+admin.site.register(User, UserAdmin)
 
 class KlasaAdmin(admin.ModelAdmin):
     list_display = ['name','school']
@@ -101,8 +86,8 @@ class KandydatResources(resources.ModelResource):
     user_last_name = Field(attribute="user__last_name", column_name="Nazwisko")
     first_name1 = Field(attribute="user__first_name", column_name='Imię1')
     second_name2 = Field(attribute="user__second_name", column_name='Imię2')
-    pesel = Field(attribute="user__pesel" ,  column_name = "Pesel")
-    dokument = Field(attribute="document__name", column_name="Dokument")
+    # pesel = Field(attribute="user__pesel" ,  column_name = "Pesel")
+    # dokument = Field(attribute="document__name", column_name="Dokument")
     suma_pkt = Field(attribute="suma_pkt", column_name="Pkt")
     class Meta:
         model = Kandydat
@@ -117,6 +102,8 @@ class ReadOnlyMixin(): # Add inheritance from "object" if using Python 2
 
 
 class KandydatAdmin(ExportMixin, admin.ModelAdmin):
+    # form = KandydatFormAdmin
+
     # change_list_template = "admin/licznik/kandydat/post_changelist.html"
     #Wyłaczenie dodawania kandydata ustaw na False
 
@@ -130,14 +117,21 @@ class KandydatAdmin(ExportMixin, admin.ModelAdmin):
             return ['user']
         else:
             return []
+#''' W ten sposób dodajemy foreignkey do list_display; ordering odpowiedzialne jest za sortowanie'''
+    @display(ordering='user__last_name',description='Nazwisko i imię')
+    def get_first_name_last_name(self, obj):
+        return f'{obj.user.last_name} {obj.user.first_name} '
 
-    list_display = ['user','document', 'clas','suma_pkt']
-    search_fields = ['user__last_name', 'user__pesel','document__name','user__first_name','user__second_name','user__last_name','clas__name']
-    list_filter = ['document', 'clas','clas__school']
+    @display(ordering='user__pesel', description='Pesel')
+    def get_pesel(self, obj):
+        return f'{obj.user.pesel} '
+
+    list_display = ['get_first_name_last_name','get_pesel','user','document', 'clas','suma_pkt']
+    search_fields = ['user__last_name', 'user__pesel', 'user__first_name', 'user__second_name']
+    list_filter = ['document', 'clas', 'clas__school']
     # readonly_fields = ['user']
     resource_class = KandydatResources
     list_per_page = 20
-
 
     def get_export_formats(self):
 
@@ -148,8 +142,6 @@ class KandydatAdmin(ExportMixin, admin.ModelAdmin):
         )
         return [f for f in formats if f().can_export()]
 
-
-
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
@@ -158,10 +150,9 @@ class KandydatAdmin(ExportMixin, admin.ModelAdmin):
         ]
         return my_urls + urls
 
-
     def import2(request, queryset):
         from django.http import HttpResponseRedirect
-        return HttpResponseRedirect(f'/zestawienie/')
+        return HttpResponseRedirect('/zestawienie/')
 
 
 admin.site.register(Kandydat, KandydatAdmin)
@@ -177,33 +168,16 @@ class PostAdmin(admin.ModelAdmin):
         users = []
         for user  in User.objects.all():
             users.append(user.username)
-        # send_mail(obj.title, obj.text,
-        #           settings.EMAIL_HOST_USER,
-        #           receivers, fail_silently=False)
-
         email = EmailMessage(
-             obj.title,f'Witaj  {obj.text}','',[''],receivers,reply_to=['automat@ecompus.pl']
+             obj.title,f'Witaj<br>  {obj.text}<br> <i>Prosimy nie odpowiadać na tą wiadomość</i>.\n <i>Ta wiadomość została wygenerowana automatycznie.</i> ','',[''],receivers,reply_to=['automat@ecompus.pl']
         )
         email.content_subtype = "html"
         email.send(fail_silently=True)
         return super(PostAdmin, self).save_model(request, obj, form, change)
-
-    # actions = [send_emails]
     change_list_template = "admin/licznik/post/post_changelist.html"
-
-    # def response_change(self, request, obj):
-    #     if "_make-unique" in request.POST:
-    #         matching_names_except_this = self.get_queryset(request).filter(name=obj.name).exclude(pk=obj.id)
-    #         matching_names_except_this.delete()
-    #         obj.is_unique = True
-    #         obj.save()
-    #         self.message_user(request, "This villain is now unique")
-    #         return HttpResponseRedirect(".")
-    #     return super().response_change(request, obj)
-
-    list_display = ['text','date']
-    search_fields = ['text','date']
-    list_filter = ['text','date']
+    list_display = ['text', 'date']
+    search_fields = ['text', 'date']
+    list_filter = ['text', 'date']
     list_per_page = 20
 
 
@@ -211,5 +185,15 @@ class SchoolAdmin(admin.ModelAdmin):
     list_display = ['name']
     search_fields = ['name']
 
+
 admin.site.register(School, SchoolAdmin)
-admin.site.register(Status)
+
+
+class StatusAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, change):
+        for stat in Status.objects.all():
+            stat.delete()
+        return super(StatusAdmin, self).save_model(request, obj, form, change)
+
+
+admin.site.register(Status, StatusAdmin)

@@ -7,6 +7,11 @@ Wybierz klasę
 
 
 {%block content %}
+
+<div class="niezalogowany">
+  Jesteś zalogowany <font color="blue"> {{ user.username }}!</font>
+      Witaj {{ user.first_name}}
+  </div>
 {% if messages %}
 
    {% for message in messages %}
@@ -21,8 +26,16 @@ Wybierz klasę
         {% endfor %}
 
 {% endif %}
-Musisz czekać
+
 {% if all_klas_count > 0 %}
+
+    {% if checkstat or not statusdate %}
+        <div class="niezalogowany">
+           <div align="center" class="alert alert-danger w-100 p-3 h-25">
+               <button>Zablokowano wybór klasy</button>
+            </div>
+        </div>
+    {% else %}
     <div >
         <form action="{% url 'zapisz-page' %}">
 
@@ -33,12 +46,10 @@ Musisz czekać
                      <option value= {{ klasa.id }}>{{klasa.name}} {{ klasa.school.name}}</option>
                      {% endfor %}
                  </select>
-
-
-
                 <input type="submit" value="Zapisz" >
         </form>
     </div>
+    {% endif %}
 {% endif %}
 {% if all_klas_count == 0 %}
     Zaczekaj na wprowadzenie klas do systemu

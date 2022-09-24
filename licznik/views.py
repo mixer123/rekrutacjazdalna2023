@@ -105,10 +105,11 @@ def activate(request, uidb64, token):
             messages.warning(request, 'Link uszkodzony')
             return render(request, 'invalidlink.html')
 
-@login_required(login_url='/accounts/login')
+@login_required(login_url='/login/')
 def readposts(request):
+    user = request.user
     allposts = Post.objects.order_by('-date')
-    return render(request, 'readposts.html',{'allposts':allposts})
+    return render(request, 'readposts.html',{'allposts':allposts,'user':user})
 
 def starting_page(request):
     if request.user.is_authenticated:
@@ -125,7 +126,7 @@ def starting_page(request):
 
     return render(request, 'index.html')
 
-@login_required(login_url='/accounts/login')
+@login_required(login_url='/login/')
 def zmienstatus(request):
 
     if Status.objects.all().count() == 0 or None:
@@ -213,7 +214,7 @@ def zmienstatus(request):
                 return render(request, 'zmienstatus.html', {'form': form, 'datestart': datestart, 'dateend': dateend,'comment': comment})
 
 
-@login_required(login_url='/accounts/login')
+@login_required(login_url='/login/')
 def chooseclas(request):
     if Status.objects.all().count()==0 or None:
         messages.warning(request, 'Zablokowano wybór klasy')
@@ -230,13 +231,14 @@ def chooseclas(request):
         statusdate = True
 
     if checkstat or not statusdate:
+        messages.warning(request, 'Zablokowano wybór klasy')
         message = False # blokada zapisu przez kandydata
     else:
         message = True
     all_klas = Klasa.objects.all()
     all_klas_count = Klasa.objects.all().count()
     print('all klas count',all_klas_count)
-    return render(request, 'chooseclas.html', {'all_klas': all_klas, 'all_klas_count':all_klas_count,'message':message})
+    return render(request, 'chooseclas.html', {'statusdate':statusdate,'checkstat':checkstat,'all_klas': all_klas, 'all_klas_count':all_klas_count,'message':message})
 
 
 @login_required(login_url='/accounts/login')
@@ -262,16 +264,17 @@ def zapisz(request):
     return render(request, 'zapisz.html')
 
 
-@login_required(login_url='/accounts/login')
+@login_required(login_url='/login/')
 def zmiendane(request):
         patern = request.user.username
         user1 = User.objects.get(username=patern)
+
         user = get_object_or_404(User, id=user1.id)
         kandydat = Kandydat(user_id=user.id)
         list_kand_id = []
         for i in Kandydat.objects.all():
             list_kand_id.append(i.user_id)
-        form = UserForm(request.POST or None, instance=user)
+        form = UserForm1(request.POST or None, instance=user, initial={'password': user1.password})
         if form.is_valid():
             form.save()
             return render(request, 'success.html')
@@ -280,8 +283,9 @@ def zmiendane(request):
         else:
             return render(request, 'zmienlogin.html', {'user': user, 'form': form})
 
-@login_required(login_url='/accounts/login')
+@login_required(login_url='/login/')
 def zmienclas(request):
+    user_request = request.user
     stat = Status.objects.all().first()
     checkstat = stat.status
     datestart = stat.datastart
@@ -306,15 +310,15 @@ def zmienclas(request):
         form = KandydatForm(request.POST or None, instance=kandydat)
         if form.is_valid():
             form.save()
-            return redirect('starting-page')
-        return render(request, 'zmienclas.html', {'user': user, 'form': form,
+            return redirect('zmienclas-page')
+        return render(request, 'zmienclas.html', {'user': user_request, 'form': form,
                                                   'datastart':stat.datastart,'dataend':stat.dataend,'checkstat':checkstat,'statusdate':statusdate})
     else:
-        return render(request, 'zmienclas.html',{'checkstat':checkstat,'statusdate':statusdate})
+        return render(request, 'zmienclas.html',{'checkstat':checkstat,'statusdate':statusdate,'user':user_request})
 
 
 
-@login_required(login_url='login-page')
+@login_required(login_url='/login/')
 def zestawienieklasy(request):
     try:
         clas = Klasa.objects.filter(school_id=School.objects.get(name=request.GET['schools']).id)
@@ -383,7 +387,7 @@ def zestawienie(request):
     return render(request, 'zestawienie.html',{'all_klas': all_klas,'all_school':all_school})
 
 
-@login_required(login_url='login')
+@login_required(login_url='/login/')
 def uploadfile(request):
     try:
         Upload.objects.all().delete()

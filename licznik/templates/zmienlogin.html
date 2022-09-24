@@ -10,15 +10,16 @@ Zmień dane użytkownika
 {%block content %}
 
 
-{{ user }}
-
-<form  method = 'POST' enctype="multipart/form-data">
-        {% csrf_token %}
-
-
-        <table>
-            {{ form.as_table }}
-        </table>
-        <button type="submit" class="btn btn-lg btn-warning">Submit</button>
-    </form>
+<div class="niezalogowany">
+     Jesteś zalogowany <font color="blue"> {{ user.username }}!</font>Witaj {{ kandydat.user.first_name}}
+</div>
+<div class="niezalogowany">
+    <form  method = 'POST' enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <button type="submit" >Wyślij</button>
+        </form>
+</div>
 {% endblock %}

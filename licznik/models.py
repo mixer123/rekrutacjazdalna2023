@@ -79,8 +79,17 @@ class Status(models.Model):
     dataend = models.DateField(default=date.today, verbose_name='Data końcowa')
     status = models.BooleanField(default=False, verbose_name='status')
 
-    # def __str__(self):
-    #     return f'{self.status}'
+    def __str__(self):
+        datecurrent = datetime.date.today()
+        if datecurrent > self.dataend or datecurrent < self.datastart:
+            statusdate = False
+        else:
+            statusdate = True
+        if self.status or not statusdate:
+            stat=  "zablokowano wpis kandydata"
+        else:
+            stat= "odblokowano wpis kandydata"
+        return f'{stat}'
 
 
 
@@ -139,7 +148,7 @@ class User(AbstractUser):
         if instance.is_superuser:
             raise PermissionDenied
     def __str__(self):
-        return f'{str(self.last_name)} {str(self.first_name)}'
+        return f'{str(self.username)}'
 
 
 
@@ -223,7 +232,7 @@ class Kandydat(models.Model):
         (0, 0),
         (3, 3),
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Kandydat')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Użytkownik')
     clas = models.ForeignKey(Klasa, null=True, on_delete=models.SET_NULL, verbose_name='Klasa')
     document = models.ForeignKey(Oryginal, null=True, on_delete=models.SET_NULL, verbose_name='Dokument')
     internat = models.BooleanField(default=False, verbose_name='Internat')
@@ -251,7 +260,7 @@ class Kandydat(models.Model):
 
     def __str__(self):
 
-        return f'{self.user.last_name}, {self.user.first_name}'
+        return f'{self.user} {self.user.first_name} {self.user.last_name}'
 
     def save(self):
 

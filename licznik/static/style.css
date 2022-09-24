@@ -3,15 +3,19 @@ p {
   color: orangered;
   font-size: 15px;
    padding-left:18px;
-
-
   }
 
 .niezalogowany{
+  color: green;
+  font-size: 15px;
+  padding-left: 18px;
+}
+
+
+.niezalogowany_red{
   color: orangered;
   font-size: 15px;
   padding-left: 18px;
-
 }
 
 
