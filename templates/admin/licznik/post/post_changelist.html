@@ -1,5 +1,5 @@
 {% extends 'admin/licznik/post/change_list.html' %}
-{% block form_top %}
+{% block.super %}hello
     <form action="{% url 'send-email' pk=post.id %}" method="POST">
           {% csrf_token %}
           <input type="submit" value="Send Email" name="email">.

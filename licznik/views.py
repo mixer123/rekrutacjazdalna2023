@@ -16,7 +16,7 @@ from .models import *
 from django.db.models import Count
 from django.shortcuts import redirect
 
-# from .models import Upload
+# from .models import upload
 # from .forms import KandydatForm
 from django.shortcuts import render
 from accounts.tokens import account_activation_token
@@ -402,7 +402,7 @@ def uploadfile(request):
             os.remove(os.path.join(dir, f))
         # Handle file upload
         if request.method == 'POST':
-            form = UploadForm(request.POST, request.FILES)
+            form = UploadForm1(request.POST, request.FILES)
             if form.is_valid():
                 docfile = Upload(file = request.FILES['docfile'])
                 docfile.save()
@@ -442,7 +442,7 @@ def uploadfile(request):
 
                 return redirect('/')
         else:
-            form = UploadForm() # A empty, unbound form
+            form = UploadForm1() # A empty, unbound form
     except Exception:
         return render(request, 'errorupload.html')
 

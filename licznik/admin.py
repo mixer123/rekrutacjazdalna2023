@@ -1,11 +1,17 @@
+import csv
+import os
+
 from django.contrib.admin import display
+from django.contrib.auth.hashers import make_password
+from django.shortcuts import render, get_object_or_404
+from django.template.response import TemplateResponse
 from django.urls import path
 
 from import_export import resources
 from import_export.admin import ExportMixin
 from django.contrib import admin
 from import_export.fields import Field
-from .forms import UserForm, UserChangeForm, UserForm1, UserForm2
+from .forms import UserForm, UserChangeForm, UserForm1, UserForm2, UploadForm, UploadForm1
 from .models import *
 from import_export.formats import base_formats
 from django.core.mail import EmailMessage
@@ -59,7 +65,31 @@ class MyUserAdmin(UserAdmin):
 admin.site.register(User, UserAdmin)
 
 class KlasaAdmin(admin.ModelAdmin):
-    list_display = ['name','school']
+    list_display = ['name','school','show_oryg','show_kopia','show_podanie','show_all']
+
+    def show_oryg(self, obj):
+        doc_oryg = get_object_or_404(Oryginal, name='ORYGINAL')
+        result = Kandydat.objects.filter(document=doc_oryg, clas=obj).count()
+        return result
+    def show_kopia(self, obj):
+        doc_kopia = get_object_or_404(Oryginal, name='KOPIA')
+        result = Kandydat.objects.filter(document=doc_kopia, clas=obj).count()
+        return result
+
+    def show_podanie(self, obj):
+        doc_podanie = get_object_or_404(Oryginal, name='PODANIE')
+        result = Kandydat.objects.filter(document=doc_podanie, clas=obj).count()
+        return result
+
+    def show_all(self, obj):
+        result = Kandydat.objects.filter(clas=obj).count()
+        return result
+    show_kopia.short_description ='Kopia'
+    show_oryg.short_description = 'Oryginał'
+    show_podanie.short_description = 'Podanie'
+    show_all.short_description = 'Razem'
+
+
 
 
 admin.site.register(Klasa, KlasaAdmin)
@@ -79,7 +109,7 @@ class OcenaAdmin(admin.ModelAdmin):
 
 admin.site.register(Ocena, OcenaAdmin)
 
-# admin.site.register(Upload)
+# admin.site.register(upload)
 
 class KandydatResources(resources.ModelResource):
 
@@ -174,7 +204,7 @@ class PostAdmin(admin.ModelAdmin):
         email.content_subtype = "html"
         email.send(fail_silently=True)
         return super(PostAdmin, self).save_model(request, obj, form, change)
-    change_list_template = "admin/licznik/post/post_changelist.html"
+
     list_display = ['text', 'date']
     search_fields = ['text', 'date']
     list_filter = ['text', 'date']
@@ -197,3 +227,78 @@ class StatusAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Status, StatusAdmin)
+# class UploadAdmin(admin.ModelAdmin):
+#     form=UploadForm
+#     print(request.Files['docfile'])
+#     def save_model(self, request, obj, form, change):
+#         dir = 'media/'
+#
+#         # for f in os.listdir(dir):
+#         #     os.remove(os.path.join(dir, f))
+#         # for stat in upload.objects.all():
+#         #     stat.delete()
+#         firstfile = upload.objects.all()[0].file
+#         list_oc = []
+#         for i in Ocena.objects.all():
+#             list_oc.append(i.ocena)
+#         ocena_min = sorted(list_oc)[0]
+#         ocena_id = Ocena.objects.get(ocena=ocena_min)
+#
+#         with open('media/' + str(firstfile), newline='') as csvfile:
+#             spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+#             for row in spamreader:
+#                 row_strip_0 = make_password(row[0].strip())
+#                 row_strip_1 = row[1].strip()
+#                 row_strip_2 = row[2].strip()
+#                 row_strip_3 = row[3].strip()
+#                 row_strip_4 = row[4].strip()
+#                 row_strip_5 = row[5].strip()
+#                 row_strip_6 = str(row[6].strip())
+#                 user = User(password=row_strip_0,
+#                             username=row_strip_1,
+#                             first_name=row_strip_2,
+#                             second_name=row_strip_3,
+#                             last_name=row_strip_4,
+#                             email=row_strip_5,
+#                             pesel=row_strip_6)
+#                 user.save()
+#                 kandydat = Kandydat(
+#                     user=user,
+#                     j_pol_egz=0,
+#                     mat_egz=0,
+#                     suma_pkt=0,
+#                     j_obcy_egz=0,
+#                     j_pol_oc=ocena_id,
+#                     mat_oc=ocena_id,
+#                     biol_oc=ocena_id,
+#                     inf_oc=ocena_id,
+#                 )
+#                 kandydat.save()
+#
+#         return super(UploadAdmin, self).save_model(request, obj, form, change)
+class UploadAdmin(admin.ModelAdmin):
+
+    # change_list_template = "admin/upload_csv.html"
+
+
+    # def get_urls(self):
+    #     urls = super().get_urls()
+    #     new_urls = [path('admin/upload-csv/',self.upload_csv),]
+    #     return new_urls + urls
+    # def upload_csv(self, request):
+    #     # form = UploadForm
+    #     # if request.method == "POST":
+    #     #     docfile = request.FILES['docfile']
+    #     return render(request,'admin/upload_csv.html')
+    def save_model(self, request, obj, form, change):
+        for stat in Upload.objects.all():
+            stat.delete()
+        dir = 'media/'
+        for f in os.listdir(dir):
+            os.remove(os.path.join(dir, f))
+        super(UploadAdmin, self).save_model(request, obj, form, change)
+        print('plik',  os.listdir(dir)[0])
+
+
+
+admin.site.register(Upload, UploadAdmin)

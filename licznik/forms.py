@@ -142,12 +142,18 @@ class KandydatForm(forms.ModelForm):
 #         fields = '__all__'
 #         # exclude = ["user"]
 
-
+# ModelForm pobiera pole z modelu upload
 class UploadForm(forms.Form):
     docfile = forms.FileField(
         label='Dołącz plik csv',
         help_text='max. 1MB',
         validators=[FileExtensionValidator(allowed_extensions=['csv'])])
+class UploadForm1(forms.Form):
+    docfile = forms.FileField(
+        label='Dołącz plik csv',
+        help_text='max. 1MB',
+        validators=[FileExtensionValidator(allowed_extensions=['csv'])])
+
 
 
 class StatusForm(forms.ModelForm):

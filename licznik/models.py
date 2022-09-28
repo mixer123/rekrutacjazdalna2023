@@ -284,5 +284,6 @@ class Kandydat(models.Model):
 
 
 class Upload(models.Model):
-    file = models.FileField()
+    file = models.FileField(verbose_name='Dołącz plik csv',
+                            validators=[FileExtensionValidator(allowed_extensions=['csv'])])
 

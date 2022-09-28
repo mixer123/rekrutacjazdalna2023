@@ -2,24 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57e25f23-2a35-47fd-af5f-e2a7a3f1d760" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/templates/admin/licznik/upload/change_list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/admin/licznik/upload/upload_csv.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/admin/upload_csv.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/migrations/0001_initial.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/static/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/base1.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/base1.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/chooseclas.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/chooseclas.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/errorkandydat.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/errorkandydat.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/readposts.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/readposts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/signup.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/zmienclas.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/zmienclas.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/zmienlogin.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/zmienlogin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/licznik/templates/zmienlogin1.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/zmienlogin1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/templates/uploadfile.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/uploadfile.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rekrutacjazdalna2023/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/rekrutacjazdalna2023/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/admin/licznik/post/post_changelist.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/admin/licznik/post/post_changelist.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,20 +41,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/mixer/MEGAsync/pythonProject/django/rekrutacjazdalna2023/templates/registration/templates&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/home/mixer/MEGAsync/pythonProject/django/rekrutacjazdalna2023/templates/admin/licznik/upload",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates/admin/licznik/upload" />
+      <recent name="$PROJECT_DIR$/templates/admin" />
+      <recent name="$PROJECT_DIR$/templates/admin/licznik" />
       <recent name="$PROJECT_DIR$/templates/registration/templates" />
       <recent name="$PROJECT_DIR$/templates" />
-      <recent name="$PROJECT_DIR$/templates/registration" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates/admin" />
+      <recent name="$PROJECT_DIR$/templates/admin/licznik/upload" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
