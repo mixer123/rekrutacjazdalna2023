@@ -79,6 +79,10 @@ class Status(models.Model):
     dataend = models.DateField(default=date.today, verbose_name='Data końcowa')
     status = models.BooleanField(default=False, verbose_name='status')
 
+    def clean(self):
+        if self.datastart > self.dataend:
+            raise ValidationError('Data końcowa jest przed początkową')
+
     def __str__(self):
         datecurrent = datetime.date.today()
         if datecurrent > self.dataend or datecurrent < self.datastart:
@@ -137,6 +141,13 @@ class User(AbstractUser):
         MinLengthValidator(11), MaxLengthValidator(11), f_pesel], help_text='Wymagany')
     email = models.EmailField('email adress', unique=True, help_text='Wymagany')
 
+    class Meta:
+        db_table = 'user'
+        constraints = [
+            models.UniqueConstraint(fields=['username'], name='unique User'),
+            models.UniqueConstraint(fields=['pesel'], name='unique pesel'),
+            models.UniqueConstraint(fields=['email'], name='unique email')
+        ]
 
     # USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['pesel','first_name','email']
@@ -284,6 +295,9 @@ class Kandydat(models.Model):
 
 
 class Upload(models.Model):
-    file = models.FileField(verbose_name='Dołącz plik csv',
+    file = models.FileField(verbose_name='Dołącz plik csv',help_text='Plik powinien zawierać w odpowiedniej kolejności: hasło, login, pierwsze i drugie imię, nazwisko, email oraz pesel',
                             validators=[FileExtensionValidator(allowed_extensions=['csv'])])
+
+    def __str__(self):
+        return str(self.file)
 
