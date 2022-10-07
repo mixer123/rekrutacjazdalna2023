@@ -129,18 +129,6 @@ def number_id(name):
 #     last_id=User.objects.all().last().id
 #     return last_id
 class User(AbstractUser):
-
-
-    username = models.CharField(max_length=30, unique=True, verbose_name='Nazwa użytkownika',
-                                help_text='Unikalna nazwa')
-
-    first_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Imię')
-    second_name = models.CharField(null=True, blank=True, max_length=10, help_text='Opcja', verbose_name='Drugie imię ')
-    last_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Nazwisko')
-    pesel = models.CharField(max_length=11, unique=True, validators=[
-        MinLengthValidator(11), MaxLengthValidator(11), f_pesel], help_text='Wymagany')
-    email = models.EmailField('email adress', unique=True, help_text='Wymagany')
-
     class Meta:
         db_table = 'user'
         constraints = [
@@ -149,8 +137,20 @@ class User(AbstractUser):
             models.UniqueConstraint(fields=['email'], name='unique email')
         ]
 
+
+    username = models.CharField(max_length=30, unique=True, verbose_name='Nazwa użytkownika',
+                                help_text='Unikalna nazwa')
+    first_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Imię')
+    second_name = models.CharField(null=True, blank=True, max_length=10, help_text='Opcja', verbose_name='Drugie imię ')
+    last_name = models.CharField(max_length=200, help_text='Wymagany', verbose_name='Nazwisko')
+    pesel = models.CharField(max_length=11, unique=True, validators=[
+        MinLengthValidator(11), MaxLengthValidator(11), f_pesel], help_text='Wymagany')
+    email = models.EmailField('email adress', unique=True, help_text='Wymagany')
+
+
+
     # USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['pesel','first_name','email']
+    # REQUIRED_FIELDS = ['pesel','first_name','email']
 
 
    # Blokada usuniecia konta admin

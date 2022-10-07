@@ -255,13 +255,29 @@ class UploadAdmin(admin.ModelAdmin):
                                     second_name=row_strip_3,last_name=row_strip_4, email=row_strip_5, pesel=row_strip_6)
                         kandydat = Kandydat(user=user, j_pol_egz=0, mat_egz=0, suma_pkt=0, j_obcy_egz=0,
                             j_pol_oc=ocena_id, mat_oc=ocena_id, biol_oc=ocena_id, inf_oc=ocena_id)
-                        if User.objects.filter(username=row_strip_1).exists():
-                            print('taki user juz jest')
-                        else:
-                            user.save()
-                            kandydat.save()
+                        # user.save()
+                        # kandydat.save()
+                        # if User.objects.filter(username=row_strip_1).exists():
+                        #     print('taki user juz jest 1')
+                        #     print('row strip',row_strip_1)
+                        #     print('taki user istnieje:', User.objects.filter(username=row_strip_1))
+                        #     print('taki user juz jest 1')
+                        #
+                        #     return HttpResponseRedirect('https://www.yahoo.com/search/')
+                        # else:
+                        # user.save()
+                        # kandydat.save()
+                    # user.save()
+                    # kandydat.save()
         except IntegrityError:
-            return HttpResponseRedirect('/user/already_exists')
+            return HttpResponseRedirect('https://www.yahoo.com/search/')
+        try:
+            user.save()
+            kandydat.save()
+        except TransactionManagementError:
+            return print('error')
+        except IntegrityError:
+            return HttpResponseRedirect('https://www.yahoo.com/search/')
 
 
 

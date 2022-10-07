@@ -6,10 +6,10 @@
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/licznik/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/Kandydat-2022-08-07.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/licznik/upload/change_list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/licznik/upload/upload_csv.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/upload_csv.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/licznik/templates/base1.html" beforeDir="false" afterPath="$PROJECT_DIR$/licznik/templates/base1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media/kandydat.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rekrutacjazdalna2023/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/rekrutacjazdalna2023/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
