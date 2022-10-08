@@ -228,7 +228,7 @@ admin.site.register(Status, StatusAdmin)
 class UploadAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
-        try:
+        # try:
             for stat in Upload.objects.all():
                 stat.delete()
             dir = 'media/'
@@ -251,37 +251,19 @@ class UploadAdmin(admin.ModelAdmin):
                         row_strip_4 = row[4].strip()
                         row_strip_5 = row[5].strip()
                         row_strip_6 = str(row[6].strip())
-                        user = User(password=row_strip_0,username=row_strip_1,first_name=row_strip_2,
-                                    second_name=row_strip_3,last_name=row_strip_4, email=row_strip_5, pesel=row_strip_6)
-                        kandydat = Kandydat(user=user, j_pol_egz=0, mat_egz=0, suma_pkt=0, j_obcy_egz=0,
-                            j_pol_oc=ocena_id, mat_oc=ocena_id, biol_oc=ocena_id, inf_oc=ocena_id)
-                        # user.save()
-                        # kandydat.save()
-                        # if User.objects.filter(username=row_strip_1).exists():
-                        #     print('taki user juz jest 1')
-                        #     print('row strip',row_strip_1)
-                        #     print('taki user istnieje:', User.objects.filter(username=row_strip_1))
-                        #     print('taki user juz jest 1')
-                        #
-                        #     return HttpResponseRedirect('https://www.yahoo.com/search/')
-                        # else:
-                        # user.save()
-                        # kandydat.save()
-                    # user.save()
-                    # kandydat.save()
-        except IntegrityError:
-            return HttpResponseRedirect('https://www.yahoo.com/search/')
-        try:
-            user.save()
-            kandydat.save()
-        except TransactionManagementError:
-            return print('error')
-        except IntegrityError:
-            return HttpResponseRedirect('https://www.yahoo.com/search/')
+                    try:
+                            user, created = User.objects.update_or_create(password=row_strip_0,username=row_strip_1,first_name=row_strip_2,
+                                        second_name=row_strip_3,last_name=row_strip_4, email=row_strip_5, pesel=row_strip_6)
+                            user.save()
+                            kandydat, created_kan = Kandydat.objects.update_or_create(user=user, j_pol_egz=0, mat_egz=0,
+                                                                                      suma_pkt=0, j_obcy_egz=0,
+                                                                                      j_pol_oc=ocena_id,
+                                                                                      mat_oc=ocena_id, biol_oc=ocena_id,
+                                                                                      inf_oc=ocena_id)
+                            kandydat.save()
 
-
-
-
+                    except (IntegrityError, TypeError):
+                           return
 
 
 admin.site.register(Upload, UploadAdmin)
